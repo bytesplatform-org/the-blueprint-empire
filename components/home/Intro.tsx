@@ -52,7 +52,7 @@ export default function Intro() {
   const { id, sheet } = sheets.intro;
   return (
     <section className="sheet deep on-dark" id={id} data-sheet={sheet}>
-      <div className="wrap">
+      <div className="wrap" data-parallax>
         <SheetHead heading={intro.heading} body={intro.body} />
         <Elevation>
           <ol className="stages">

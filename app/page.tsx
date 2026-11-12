@@ -7,6 +7,7 @@ import Hero from "@/components/home/Hero";
 import Statement from "@/components/home/Statement";
 import Marquee from "@/components/home/Marquee";
 import Cursor from "@/components/site/Cursor";
+import ArcParallax from "@/components/site/ArcParallax";
 import Intro from "@/components/home/Intro";
 import Foundations from "@/components/home/Foundations";
 import Programs from "@/components/home/Programs";
@@ -37,6 +38,7 @@ export default function Home() {
         <Contact />
       </main>
       <SiteFooter />
+      <ArcParallax />
       <RevealObserver />
       <Cursor />
     </>

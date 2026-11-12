@@ -9,7 +9,7 @@ export default function Agencies() {
   const { spec } = agencies;
   return (
     <section className="sheet on-dark" id={id} data-sheet={sheet}>
-      <div className="wrap">
+      <div className="wrap" data-parallax>
         <SheetHead heading={agencies.heading} body={agencies.body} />
 
         <figure className="fig-plate">

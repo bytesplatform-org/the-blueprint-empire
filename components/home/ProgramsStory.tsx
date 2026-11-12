@@ -46,8 +46,9 @@ export default function ProgramsStory({ head, legend, children }: { head: ReactN
   const [peek, setPeek] = useState<number | null>(null);
 
   useEffect(() => {
-    const stage = ref.current;
-    if (!stage || !motionAllowed()) return;
+    const inner = ref.current;
+    const stage = inner?.parentElement;
+    if (!inner || !stage || !motionAllowed()) return;
     const schedule = stage.querySelector<HTMLElement>(".schedule");
     const weeksEl = stage.querySelector<HTMLElement>(".weeks");
     if (!schedule || !weeksEl) return;
@@ -56,20 +57,20 @@ export default function ProgramsStory({ head, legend, children }: { head: ReactN
     const rowBars = rows.map(r => [...r.querySelectorAll<HTMLElement>(".bar")]);
 
     const measure = () => {
-      const s = stage.getBoundingClientRect();
+      const s = inner.getBoundingClientRect();
       const w = weeksEl.getBoundingClientRect();
       const sc = schedule.getBoundingClientRect();
-      stage.style.setProperty("--wl", `${w.left - s.left}px`);
-      stage.style.setProperty("--ww", `${w.width}px`);
-      stage.style.setProperty("--st", `${sc.top - s.top}px`);
-      stage.style.setProperty("--sh", `${sc.height}px`);
+      inner.style.setProperty("--wl", `${w.left - s.left}px`);
+      inner.style.setProperty("--ww", `${w.width}px`);
+      inner.style.setProperty("--st", `${sc.top - s.top}px`);
+      inner.style.setProperty("--sh", `${sc.height}px`);
     };
 
     let lastWeek = 1;
     let lastDone = false;
     const apply = (ph: number) => {
       measure();
-      stage.style.setProperty("--ph", ph.toFixed(4));
+      inner.style.setProperty("--ph", ph.toFixed(4));
       const wk = ph * WEEKS;
       const cur = Math.min(WEEKS, Math.max(1, Math.floor(wk) + 1));
       const done = ph >= 0.995;
@@ -123,7 +124,7 @@ export default function ProgramsStory({ head, legend, children }: { head: ReactN
           return;
         }
         const k = Math.min(WEEKS, Math.max(1, Math.floor(((e.clientX - w.left) / w.width) * WEEKS) + 1));
-        stage.style.setProperty("--pk", ((k - 0.5) / WEEKS).toFixed(4));
+        inner.style.setProperty("--pk", ((k - 0.5) / WEEKS).toFixed(4));
         setPeek(k);
       };
       const leave = () => setPeek(null);
@@ -173,7 +174,9 @@ export default function ProgramsStory({ head, legend, children }: { head: ReactN
   const isFinished = peek == null && finished;
 
   return (
-    <div className="ps-stage" ref={ref}>
+    <div className="ps-stage">
+      {/* Inner wrapper: the next sheet's parallax moves this, never the pinned stage. */}
+      <div className="ps-inner" ref={ref} data-parallax>
       <div className="wrap">
         <div className="ps-top">
           {head}
@@ -201,6 +204,7 @@ export default function ProgramsStory({ head, legend, children }: { head: ReactN
         <span className="mono">WK {Math.min(WEEKS, week)}</span>
       </div>
       <div className={peek ? "ps-playhead ghost on" : "ps-playhead ghost"} aria-hidden="true" />
+      </div>
     </div>
   );
 }

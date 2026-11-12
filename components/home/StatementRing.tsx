@@ -14,7 +14,7 @@ const CIRC = 2 * Math.PI * R;
 /**
  * The three lines set on a circle around the mark. While the section is on
  * screen the ring turns with the scroll (both ways) and scales in as it
- * arrives; the hero behind drifts at ~60 % speed as this sheet rises over it.
+ * arrives. (The hero's drift behind it is ArcParallax's.)
  */
 export default function StatementRing({ text, children }: { text: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,7 +25,6 @@ export default function StatementRing({ text, children }: { text: string; childr
     if (!el || !section || !motionAllowed()) return;
     const ring = el.querySelector("[data-ring]");
     const mark = el.querySelector("[data-mark]");
-    const heroInner = document.querySelector<HTMLElement>("[data-hero-inner]");
 
     const ctx = gsap.context(() => {
       gsap.fromTo(ring, { rotate: -150 }, {
@@ -46,13 +45,6 @@ export default function StatementRing({ text, children }: { text: string; childr
         ease: "expo.out",
         scrollTrigger: { trigger: mark, start: "top 80%", once: true },
       });
-      if (heroInner) {
-        gsap.fromTo(heroInner, { y: 0 }, {
-          y: () => window.innerHeight * 0.4,
-          ease: "none",
-          scrollTrigger: { trigger: section, start: "top bottom", end: "top top", scrub: true, invalidateOnRefresh: true },
-        });
-      }
     }, el);
     return () => ctx.revert();
   }, []);

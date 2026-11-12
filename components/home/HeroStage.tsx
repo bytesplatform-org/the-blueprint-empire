@@ -144,7 +144,7 @@ export default function HeroStage({ id, sheet, children }: { id: string; sheet: 
   return (
     <section ref={ref} className="hero" id={id} data-sheet={sheet} aria-labelledby="hero-title">
       {/* Inner wrapper: the statement sheet's parallax moves this, never the pinned section itself. */}
-      <div className="hero-inner" data-hero-inner>
+      <div className="hero-inner" data-hero-inner data-parallax>
         <canvas ref={canvasRef} className="hero-gl" aria-hidden="true" />
         {children}
       </div>

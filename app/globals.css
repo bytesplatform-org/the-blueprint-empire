@@ -686,7 +686,8 @@ html.motion .fs-final {
    program's certificate pops in as it finishes. Static: the plain schedule. */
 .ps-week, .ps-playhead, .sch-name .ps-cert { display: none; }
 html.motion .ps-section { padding-top: 0; }
-html.motion .ps-stage { position: relative; padding: calc(var(--nav-h) + 24px) 0 24px; }
+html.motion .ps-stage { padding: calc(var(--nav-h) + 24px) 0 24px; }
+html.motion .ps-inner { position: relative; }
 html.motion .ps-top { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 48px; align-items: end; margin-bottom: 28px; }
 html.motion .ps-top .sheet-head { margin-bottom: 0; }
 html.motion .ps-top .sheet-head h2 { font-size: clamp(2.2rem, 4vw, 3.6rem); }
@@ -792,6 +793,34 @@ html.motion .ps-playhead.ghost.on { opacity: 1; }
 .cap .ic::after { content: ""; position: absolute; top: -4px; right: -4px; width: 7px; height: 7px; background: var(--brass); }
 .cap h3 { font-size: 1.45rem; font-weight: 500; line-height: 1.05; }
 .cap p { color: var(--graphite-dim); font-size: var(--s-2); max-width: 40ch; }
+/* the thread (CapabilitiesFlow): a gold line along each rule, in reading order */
+.cap { position: relative; }
+.cap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1.5px;
+  background: var(--brass-ink);
+  transform: scaleX(var(--fill, 0));
+  transform-origin: left;
+  display: none;
+}
+.caps.is-flow .cap::after { display: block; }
+.cap .ic { background: var(--vellum); transition: transform 0.5s var(--ease), border-color 0.5s; }
+.cap .ic::after { transition: transform 0.4s var(--ease); }
+.cap h3, .cap p { transition: opacity 0.6s var(--ease), color 0.4s, transform 0.5s var(--ease); }
+.caps.is-flow .cap:not(.lit) h3, .caps.is-flow .cap:not(.lit) p { opacity: 0.38; }
+.caps.is-flow .cap .ic svg * { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s var(--ease); }
+.caps.is-flow .cap.lit .ic svg * { stroke-dashoffset: 0; }
+.caps.is-flow .cap.lit .ic { border-color: var(--brass-ink); }
+.caps.is-flow .cap.lit .ic svg { stroke: var(--brass-ink); }
+.caps.is-flow .cap.lit .ic::after { animation: ic-ping 0.9s var(--ease) 1; }
+@keyframes ic-ping { 40% { transform: scale(1.9); } }
+.cap:hover h3 { transform: translateX(4px); }
+.caps.is-flow .cap.lit:hover .ic svg * { animation: ic-draw 0.9s var(--ease); }
+@keyframes ic-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @media (max-width: 900px) { .caps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .caps { grid-template-columns: minmax(0, 1fr); } .cap { padding-right: 0; } }
 
@@ -1093,5 +1122,5 @@ html.motion .ps-playhead.ghost.on { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001s !important; animation-delay: 0s !important; transition-duration: 0.001s !important; }
-  .orbit .spin, .orbit .counter, .seal-ring-spin { animation: none; }
+  .orbit .spin, .orbit .counter, .seal-ring-spin, .cap .ic::after { animation: none; }
 }

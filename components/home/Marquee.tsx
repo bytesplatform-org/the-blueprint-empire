@@ -38,7 +38,7 @@ function Small() {
 /**
  * Two-row marquee band. The rows run opposite ways; scrolling speeds them up
  * (and turns them round when you scroll back up), then they ease back to
- * cruising pace. Paused on hover and offscreen; still under reduced motion.
+ * cruising pace. Paused only while offscreen; still under reduced motion.
  */
 export default function Marquee() {
   const ref = useRef<HTMLElement>(null);
@@ -46,19 +46,16 @@ export default function Marquee() {
   useEffect(() => {
     const el = ref.current;
     if (!el || !motionAllowed()) return;
-    let hovered = false;
-    let st: ScrollTrigger | null = null;
     const ctx = gsap.context(() => {
       const a = gsap.to("[data-track='1']", { xPercent: -50, duration: 42, ease: "none", repeat: -1, paused: true });
       const b = gsap.fromTo("[data-track='2']", { xPercent: -50 }, { xPercent: 0, duration: 52, ease: "none", repeat: -1, paused: true });
       const tweens = [a, b];
-      st = ScrollTrigger.create({
+      ScrollTrigger.create({
         trigger: el,
         start: "top bottom",
         end: "bottom top",
-        onToggle: self => tweens.forEach(t => (self.isActive && !hovered ? t.play() : t.pause())),
+        onToggle: self => tweens.forEach(t => (self.isActive ? t.play() : t.pause())),
         onUpdate: self => {
-          if (hovered) return;
           const boost = gsap.utils.clamp(-5, 5, self.getVelocity() / 300);
           const scale = (self.direction >= 0 ? 1 : -1) * (1 + Math.abs(boost));
           tweens.forEach(t =>
@@ -71,20 +68,6 @@ export default function Marquee() {
           );
         },
       });
-      const enter = () => {
-        hovered = true;
-        tweens.forEach(t => t.pause());
-      };
-      const leave = () => {
-        hovered = false;
-        if (st?.isActive) tweens.forEach(t => t.play());
-      };
-      el.addEventListener("mouseenter", enter);
-      el.addEventListener("mouseleave", leave);
-      return () => {
-        el.removeEventListener("mouseenter", enter);
-        el.removeEventListener("mouseleave", leave);
-      };
     }, el);
     return () => ctx.revert();
   }, []);
