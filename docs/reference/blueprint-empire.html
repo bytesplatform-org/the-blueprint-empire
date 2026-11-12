@@ -1,0 +1,1649 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Blueprint Empire Corp</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Blueprint Empire Corp delivers government-ready training programs, reentry education, workforce development, entrepreneurship training and curriculum design for federal, state and community agencies.">
+<script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<style>
+/* Layout concept: the site is a set of construction drawings. Each section is a numbered sheet on a
+   cyanotype ground or a vellum overlay. The headline is drawn in GL through a fluid the pointer stirs;
+   the sections carry live figures (contours, field lines, an interference plate) the hand can move. */
+:root{
+  --cyan:#0F2B4C; --cyan-deep:#0A1E37;
+  --line:#D3E4F4; --line-dim:rgba(211,228,244,.62); --line-faint:rgba(211,228,244,.14);
+  --brass:#E0AE4C; --brass-ink:#8A5F12;
+  --vellum:#E7EDEF; --graphite:#14212E; --graphite-dim:#4B5B69; --rule:#B9C7CF;
+  --f-display:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;
+  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --s-1:.75rem;--s-2:.875rem;--s-3:1rem;--s-4:1.125rem;
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+  --wrap:1180px; --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:84px}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--cyan);color:var(--line);font-family:var(--f-body);font-size:var(--s-3);line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--cyan-deep)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:.95;text-transform:uppercase;letter-spacing:.005em}
+p{margin:0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+.mono{font-family:var(--f-mono);font-size:var(--s-1);letter-spacing:.08em;text-transform:uppercase}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+.grid-bg{background-image:linear-gradient(var(--line-faint) 1px,transparent 1px),linear-gradient(90deg,var(--line-faint) 1px,transparent 1px),linear-gradient(rgba(211,228,244,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(211,228,244,.05) 1px,transparent 1px);background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px}
+#filmGL{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:45}
+
+/* ---------- LOADER ---------- */
+.loader{display:none}
+html.motion .loader{display:block;position:fixed;inset:0;z-index:90;animation:loader-failsafe 0s linear 10s forwards}
+@keyframes loader-failsafe{to{visibility:hidden;pointer-events:none}}
+.loader-half{position:absolute;inset:0;will-change:transform;transition:transform 1.35s cubic-bezier(.87,0,.13,1)}
+.loader-half.top{clip-path:inset(0 0 50% 0)}
+.loader-half.bottom{clip-path:inset(50% 0 0 0)}
+.loader.leave .top{transform:translateX(-100%)}
+.loader.leave .bottom{transform:translateX(100%)}
+.ls{position:absolute;inset:0;background-color:var(--cyan-deep);display:flex;flex-direction:column;justify-content:space-between;padding:calc(24px + env(safe-area-inset-top,0px)) var(--gr) calc(24px + env(safe-area-inset-bottom,0px)) var(--gl)}
+.ls-row{display:flex;justify-content:space-between;gap:16px;color:var(--line-dim)}
+.ls-row b{color:var(--line);font-weight:500;font-variant-numeric:tabular-nums}
+.ls-word{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.lw{font-family:var(--f-display);font-weight:900;font-size:clamp(3.6rem,17vw,16rem);line-height:.82;text-transform:uppercase;letter-spacing:.01em;white-space:nowrap}
+.lw.outline{color:transparent;-webkit-text-stroke:1.5px var(--line-dim)}
+.lw.fill{position:absolute;inset:0;color:var(--brass);clip-path:inset(calc((1 - var(--progress,0)) * 100%) 0 0 0)}
+.scan{position:absolute;left:-4%;right:-4%;top:0;height:2px;background:var(--brass);box-shadow:0 0 22px 2px rgba(224,174,76,.6);animation:scan 1.6s cubic-bezier(.65,0,.35,1) infinite alternate}
+@keyframes scan{to{top:100%}}
+@media (max-width:640px){.hide-sm{display:none}}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(10,30,55,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line-faint)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:64px;max-width:none}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.mark{width:36px;height:36px;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:17px;position:relative}
+.mark::after{content:"";position:absolute;right:-5px;bottom:-5px;width:8px;height:8px;background:var(--brass)}
+.brand-name{font-family:var(--f-display);font-weight:800;font-size:21px;text-transform:uppercase;letter-spacing:.03em;line-height:1}
+.brand-name small{display:block;font-family:var(--f-mono);font-weight:400;font-size:10px;letter-spacing:.14em;color:var(--line-dim);margin-top:3px}
+.nav-links{display:flex;gap:26px;margin:0 0 0 auto;list-style:none;padding:0}
+.nav-links a{text-decoration:none;font-size:var(--s-2);color:var(--line-dim);transition:color .2s}
+.nav-links a:hover,.nav-links a.on{color:var(--line)}
+.sheet-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--brass);border:1px solid rgba(224,174,76,.45);padding:5px 9px;white-space:nowrap;min-width:92px;text-align:center}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-body);font-weight:600;font-size:var(--s-2);text-decoration:none;padding:13px 20px;border:1.5px solid var(--brass);background:var(--brass);color:var(--cyan-deep);cursor:pointer;transition:transform .3s var(--ease),background .2s,color .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--line);border-color:var(--line-dim)}
+.btn.ghost:hover{border-color:var(--line)}
+.btn svg{width:16px;height:16px}
+.menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line-dim);color:var(--line);padding:8px 12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;cursor:pointer}
+@media (max-width:1060px){
+  .nav-links,.nav .sheet-tag,.nav .btn{display:none}
+  .menu-btn{display:block}
+  .nav.open .nav-links{display:flex;flex-direction:column;gap:0;position:absolute;top:64px;left:0;right:0;background:var(--cyan-deep);border-bottom:1px solid var(--line-faint);padding:8px var(--gr) 16px var(--gl)}
+  .nav.open .nav-links a{display:block;padding:12px 0;border-bottom:1px solid var(--line-faint);font-size:var(--s-3)}
+}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;min-height:min(calc(100svh - 64px),980px);display:flex;flex-direction:column;padding-block:26px 30px;border-bottom:1px solid var(--line-faint)}
+.hero-gl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.hero-in{position:relative;z-index:1;padding-left:var(--gl);padding-right:var(--gr);display:flex;flex-direction:column;flex:1;gap:24px}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--line-dim)}
+.hero-seq{display:flex;gap:10px;list-style:none;margin:0;padding:0}
+.hero-seq li{display:flex;gap:10px}
+.hero-seq li+li::before{content:"→";color:rgba(211,228,244,.35)}
+.hero-seq li:first-child{color:var(--line)}
+.hero-read{color:var(--brass);font-variant-numeric:tabular-nums;min-width:15ch;text-align:right}
+.hero-title{margin-top:auto;font-weight:800;font-size:clamp(2.1rem,7.4vw,8.2rem);line-height:.9;letter-spacing:0}
+.hl{display:block;white-space:nowrap;will-change:transform}
+.hl:nth-child(2){padding-left:13vw}
+.hl:nth-child(3){padding-left:4vw}
+.hw{display:inline-block;will-change:transform}
+.hw[data-hollow]{color:transparent;-webkit-text-stroke:1.5px var(--brass)}
+.bl{display:inline-block;width:0;height:0}
+.hero[data-gl-type] .hw{color:transparent;-webkit-text-stroke-color:transparent}
+.hero-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:end;padding-top:18px;border-top:1px dashed var(--line-faint)}
+.lede{max-width:54ch;font-size:var(--s-4);color:var(--line-dim)}
+.lede strong{color:var(--line);font-weight:500}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.titleblock{display:grid;grid-template-columns:2fr 1.4fr 1fr 1.2fr;border:1px solid var(--line-dim);background:rgba(10,30,55,.6)}
+.titleblock div{padding:10px 14px;border-right:1px solid var(--line-faint);min-width:0}
+.titleblock div:last-child{border-right:0}
+.titleblock .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;color:var(--line-dim);text-transform:uppercase}
+.titleblock .v{font-family:var(--f-mono);font-size:12.5px;color:var(--line);margin-top:3px;overflow-wrap:anywhere}
+.titleblock .v.big{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.03em;text-transform:uppercase;line-height:1.1}
+@media (max-width:960px){
+  .hero-seq{display:none}
+  .hero-bottom{grid-template-columns:minmax(0,1fr);gap:24px}
+  .titleblock{grid-template-columns:1fr 1fr}
+  .titleblock div{border-bottom:1px solid var(--line-faint)}
+  .titleblock div:first-child{grid-column:1/-1}
+}
+@media (max-width:700px){
+  .hero-title{font-size:7.4vw}
+  .hl:nth-child(2){padding-left:7vw}
+  .hl:nth-child(3){padding-left:2vw}
+}
+
+/* ---------- TICKER ---------- */
+.ticker{overflow:hidden;border-bottom:1px solid var(--line-faint);background:var(--cyan-deep);padding-block:14px}
+.ticker-in{display:flex;gap:44px;width:max-content;animation:tick 42s linear infinite}
+.ticker span{font-family:var(--f-display);font-weight:700;font-size:1.5rem;text-transform:uppercase;letter-spacing:.04em;color:var(--line-dim);display:flex;align-items:center;gap:44px;white-space:nowrap}
+.ticker span::after{content:"";width:9px;height:9px;background:var(--brass);transform:rotate(45deg)}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ---------- SHEETS ---------- */
+section{position:relative}
+.sheet{padding-block:104px}
+.sheet-head{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;align-items:start;margin-bottom:56px}
+.sheet-no{font-family:var(--f-mono);font-size:var(--s-1);letter-spacing:.12em;text-transform:uppercase;border-top:2px solid currentColor;padding-top:10px}
+.sheet-no b{display:block;font-family:var(--f-display);font-size:44px;font-weight:800;letter-spacing:0;line-height:1;margin-top:6px}
+.sheet-head h2{font-size:clamp(2.4rem,5.2vw,4.4rem);font-weight:800}
+.sheet-head p{max-width:60ch;margin-top:18px;font-size:var(--s-4)}
+@media (max-width:760px){.sheet{padding-block:72px}.sheet-head{grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:40px}.sheet-no b{font-size:34px}}
+.vellum{background:var(--vellum);color:var(--graphite)}
+.vellum .sheet-no{color:var(--brass-ink)}
+.vellum .sheet-head p{color:var(--graphite-dim)}
+.on-blue .sheet-no{color:var(--brass)}
+.on-blue .sheet-head p{color:var(--line-dim)}
+.deep{background-color:var(--cyan-deep)}
+
+/* ---------- REVEALS (armed by JS only) ---------- */
+.line{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.line>span{display:block}
+html.armed [data-reveal="mask"] .line>span{transform:translateY(110%);transition:transform 1.1s var(--ease) calc(var(--i,0) * 90ms)}
+html.armed [data-reveal="mask"][data-shown] .line>span{transform:none}
+html.armed [data-reveal="sweep"]{clip-path:inset(0 100% 0 0);transition:clip-path 1.4s var(--ease)}
+html.armed [data-reveal="sweep"][data-shown]{clip-path:inset(0 0 0 0)}
+html.armed [data-reveal="rule"]{transform:scaleX(0);transform-origin:left;transition:transform 1.2s var(--ease) calc(var(--i,0) * 110ms)}
+html.armed [data-reveal="rule"][data-shown]{transform:none}
+html.armed [data-reveal="settle"]{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease) calc(var(--i,0) * 80ms),transform 1.1s var(--ease) calc(var(--i,0) * 80ms)}
+html.armed [data-reveal="settle"][data-shown]{opacity:1;transform:none}
+
+/* ---------- INTRO (Fig. 01) ---------- */
+.intro{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
+.stages{list-style:none;margin:0;padding:0;counter-reset:st;border-top:1px solid var(--line-dim)}
+.stages li{counter-increment:st;display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 14px;padding:20px 0;border-bottom:1px solid var(--line-faint)}
+.stages li::before{content:counter(st,decimal-leading-zero);grid-row:span 2;font-family:var(--f-mono);font-size:12px;color:var(--line-dim);padding-top:6px}
+.stages h3{font-size:1.9rem;font-weight:800;color:var(--line-dim);transition:color .4s}
+.stages p{color:var(--line-dim);font-size:var(--s-2);max-width:44ch}
+.stages li.on h3{color:var(--line)}
+.stages li.on::before{color:var(--brass)}
+html.has-st .stages h3,html.has-st .stages p{opacity:.45;transition:opacity .5s,color .4s}
+html.has-st .stages li.on h3,html.has-st .stages li.on p,html.has-st .stages li.done h3,html.has-st .stages li.done p{opacity:1}
+.fig{position:relative}
+.fig svg{width:100%;height:auto;display:block;overflow:visible}
+.fig .ink{fill:none;stroke:var(--line);stroke-width:1.4;stroke-linecap:square}
+.fig .thin{stroke-width:.8;stroke:var(--line-dim)}
+.fig .acc{stroke:var(--brass)}
+.fig .fillin{fill:var(--brass)}
+.fig .cl{fill:none;stroke:var(--brass);stroke-width:.8;stroke-dasharray:10 4 2 4;opacity:.7}
+.fig text{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;fill:var(--line-dim)}
+.fig text.acc-t{fill:var(--brass)}
+.figcap{display:flex;justify-content:space-between;gap:16px;margin-top:14px;padding-top:10px;border-top:1px solid var(--line-faint);color:var(--line-dim)}
+.figcap b{color:var(--brass);font-weight:500}
+@media (max-width:900px){.intro{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- PILLARS ---------- */
+.pillars{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1.5px solid var(--graphite);border-bottom:1.5px solid var(--graphite)}
+.pillars canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.pillar{position:relative;z-index:1;padding:26px 26px 34px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:16px;min-width:0}
+.pillar:last-child{border-right:0}
+.plate{height:170px;border:1px solid var(--rule);position:relative;background:repeating-linear-gradient(135deg,rgba(20,33,46,.06) 0 1px,transparent 1px 9px)}
+.pillars[data-gl] .plate{background:none}
+.plate .mono{position:absolute;left:10px;bottom:8px;font-size:10px;color:var(--graphite-dim);background:var(--vellum);padding:1px 5px}
+.pillar h3{font-size:clamp(1.7rem,2.6vw,2.2rem);font-weight:800}
+.pillar p{color:var(--graphite-dim)}
+.pillar ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.pillar li{font-size:var(--s-2);display:flex;gap:10px;align-items:baseline;border-top:1px dashed var(--rule);padding-top:8px}
+.pillar li::before{content:"+";font-family:var(--f-mono);color:var(--brass-ink)}
+@media (max-width:860px){.pillars{grid-template-columns:minmax(0,1fr)}.pillar{border-right:0;border-bottom:1px solid var(--rule)}.pillar:last-child{border-bottom:0}}
+
+/* ---------- PROGRAM SCHEDULE ---------- */
+.schedule{border:1px solid var(--line-dim);background:rgba(10,30,55,.55)}
+.sch-scale{display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(0,2fr);border-bottom:1px solid var(--line-dim)}
+.sch-scale .lab{padding:12px 18px;border-right:1px solid var(--line-faint);color:var(--line-dim)}
+.weeks{display:grid;grid-template-columns:repeat(8,1fr)}
+.weeks span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--line-dim);padding:12px 0 12px 8px;border-left:1px solid var(--line-faint)}
+.sch-row{border-bottom:1px solid var(--line-faint)}
+.sch-row:last-child{border-bottom:0}
+.sch-btn{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(0,2fr);cursor:pointer;width:100%}
+.sch-btn:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+.sch-name{padding:20px 18px;border-right:1px solid var(--line-faint);display:flex;gap:14px;align-items:flex-start}
+.plus{flex-shrink:0;width:22px;height:22px;border:1px solid var(--line-dim);display:grid;place-items:center;font-family:var(--f-mono);font-size:14px;transition:transform .4s var(--ease),background .3s,color .3s;margin-top:2px}
+.sch-btn[aria-expanded="true"] .plus{transform:rotate(45deg);background:var(--brass);color:var(--cyan-deep);border-color:var(--brass)}
+.sch-name h3{font-size:1.55rem;font-weight:800;line-height:1}
+.sch-name .mono{color:var(--line-dim);display:block;margin-top:6px;font-size:10.5px}
+.sch-track{display:grid;grid-template-columns:repeat(8,1fr);align-items:center;background-image:linear-gradient(90deg,var(--line-faint) 1px,transparent 1px);background-size:12.5% 100%;padding-block:16px}
+.bar{height:26px;background:var(--brass);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--cyan-deep);font-weight:500}
+.bar.ext{background:repeating-linear-gradient(135deg,var(--brass) 0 3px,transparent 3px 7px);border:1px solid var(--brass)}
+.sch-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+.sch-detail>div{overflow:hidden;min-height:0}
+.sch-btn[aria-expanded="true"]+.sch-detail{grid-template-rows:1fr}
+.detail-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;padding:6px 18px 28px 54px}
+.detail-in p{color:var(--line-dim);max-width:58ch}
+.detail-in h4{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin:0 0 10px;font-weight:500}
+.wk{list-style:none;padding:0;margin:0}
+.wk li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding:7px 0;border-top:1px dashed var(--line-faint);font-size:var(--s-2)}
+.wk li b{font-family:var(--f-mono);font-weight:500;font-size:11px;color:var(--brass);padding-top:2px}
+.incl{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.incl li{font-size:12.5px;border:1px solid var(--line-faint);padding:4px 10px}
+.dl-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px}
+.dl{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--brass);padding-bottom:2px}
+.dl:hover{color:var(--brass)}
+.sch-note{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:18px;color:var(--line-dim)}
+.sch-note span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:22px;height:10px;background:var(--brass);display:inline-block}
+.sw.ext{background:repeating-linear-gradient(135deg,var(--brass) 0 3px,transparent 3px 7px);border:1px solid var(--brass)}
+@media (max-width:760px){
+  .sch-scale{grid-template-columns:minmax(0,1fr)}
+  .sch-scale .lab{display:none}
+  .sch-btn{grid-template-columns:minmax(0,1fr)}
+  .sch-name{border-right:0;padding-bottom:8px}
+  .sch-track{padding:0 0 18px;margin:0 18px}
+  .detail-in{grid-template-columns:minmax(0,1fr);padding:4px 18px 26px}
+}
+
+/* ---------- CAPABILITIES ---------- */
+.caps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1.5px solid var(--graphite)}
+.cap{padding:28px 26px 30px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 14px;align-content:start}
+.cap .ic{grid-row:span 2;width:40px;height:40px;border:1.5px solid var(--graphite);display:grid;place-items:center;position:relative;transition:transform .5s var(--ease)}
+.cap:hover .ic{transform:rotate(-8deg)}
+.cap .ic svg{width:22px;height:22px;fill:none;stroke:var(--graphite);stroke-width:1.6}
+.cap .ic::after{content:"";position:absolute;top:-4px;right:-4px;width:7px;height:7px;background:var(--brass)}
+.cap h3{font-size:1.45rem;font-weight:800;line-height:1.05}
+.cap p{color:var(--graphite-dim);font-size:var(--s-2);max-width:40ch}
+@media (max-width:900px){.caps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.caps{grid-template-columns:minmax(0,1fr)}.cap{padding-right:0}}
+
+/* ---------- AGENCIES ---------- */
+.fig-plate{margin:0 0 48px}
+.plate-box{position:relative;aspect-ratio:21/8;max-width:100%;border:1px solid var(--line-dim);overflow:hidden;cursor:crosshair;background:repeating-radial-gradient(circle at 35% 50%,rgba(211,228,244,.1) 0 1px,transparent 1px 14px),repeating-radial-gradient(circle at 65% 50%,rgba(211,228,244,.1) 0 1px,transparent 1px 14px),var(--cyan-deep)}
+.plate-box canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.plate-tags{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;color:var(--line-dim);pointer-events:none}
+.plate-tags b{color:var(--brass);font-weight:500;font-variant-numeric:tabular-nums}
+.fig-plate figcaption{margin-top:12px;color:var(--line-dim);font-size:var(--s-2);max-width:72ch}
+@media (max-width:640px){.plate-box{aspect-ratio:4/3}}
+.agency{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:start}
+.spec{border:1px solid var(--line-dim);background:rgba(10,30,55,.55)}
+.spec-row{display:grid;grid-template-columns:150px minmax(0,1fr);border-bottom:1px solid var(--line-faint)}
+.spec-row:last-child{border-bottom:0}
+.spec-row>div{padding:14px 18px;min-width:0}
+.spec-row .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--line-dim);border-right:1px solid var(--line-faint)}
+.uei{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.uei code{font-family:var(--f-mono);font-size:18px;color:var(--brass);letter-spacing:.06em}
+.copy{background:none;border:1px solid var(--line-dim);color:var(--line);font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;cursor:pointer}
+.copy:hover{border-color:var(--brass);color:var(--brass)}
+.naics{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.naics li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;font-size:var(--s-2);color:var(--line-dim)}
+.naics b{font-family:var(--f-mono);font-weight:500;color:var(--line);font-variant-numeric:tabular-nums}
+.process{list-style:none;padding:0;margin:0;counter-reset:st;position:relative}
+.process::before{content:"";position:absolute;left:19px;top:20px;bottom:20px;width:1px;background:repeating-linear-gradient(var(--brass) 0 6px,transparent 6px 10px)}
+.process li{counter-increment:st;position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:18px;padding-bottom:28px}
+.process li:last-child{padding-bottom:0}
+.process li::before{content:counter(st,decimal-leading-zero);width:40px;height:40px;border:1.5px solid var(--brass);background:var(--cyan);display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;color:var(--brass);position:relative;z-index:1}
+.process h3{font-size:1.5rem;font-weight:800;line-height:1.1;margin-top:6px}
+.process p{color:var(--line-dim);font-size:var(--s-2);margin-top:6px;max-width:46ch}
+.docs{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+@media (max-width:900px){.agency{grid-template-columns:minmax(0,1fr)}.spec-row{grid-template-columns:minmax(0,1fr)}.spec-row .k{border-right:0;padding-bottom:0}}
+
+/* ---------- ECOSYSTEM ---------- */
+.eco{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
+.orbit{position:relative;aspect-ratio:1;max-width:100%;width:100%}
+.orbit svg{width:100%;height:100%;display:block}
+.orbit .ring{fill:none;stroke:var(--rule);stroke-width:1}
+.orbit .ring.d{stroke-dasharray:3 5}
+.orbit .spin{transform-origin:250px 250px;animation:spin 80s linear infinite}
+.orbit .counter{transform-box:fill-box;transform-origin:center;animation:spin 80s linear infinite reverse}
+.orbit .node circle{fill:var(--vellum);stroke:var(--graphite);stroke-width:1.5;transition:fill .3s}
+.orbit .node text{font-family:var(--f-mono);font-size:11px;fill:var(--graphite);text-anchor:middle;letter-spacing:.06em}
+.orbit .node.on circle{fill:var(--brass)}
+.orbit .core rect{fill:var(--graphite)}
+.orbit .core text{fill:var(--vellum);font-family:var(--f-display);font-weight:800;font-size:22px;text-anchor:middle;letter-spacing:.04em}
+.orbit .spoke{stroke:var(--rule);stroke-width:1}
+.orbit .spoke.on{stroke:var(--brass-ink);stroke-width:1.5}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brands{list-style:none;padding:0;margin:0;border-top:1.5px solid var(--graphite)}
+.brands li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:15px 4px;border-bottom:1px solid var(--rule);transition:padding .4s var(--ease),background .3s}
+.brands li:hover,.brands li.on{background:rgba(224,174,76,.16);padding-left:12px}
+.brands .n{font-family:var(--f-mono);font-size:11px;color:var(--brass-ink)}
+.brands h3{font-size:1.4rem;font-weight:800;line-height:1.05}
+.brands .t{font-size:var(--s-2);color:var(--graphite-dim);text-align:right}
+.nsba{margin-top:28px;display:flex;gap:16px;align-items:center;border:1px solid var(--graphite);padding:16px 18px}
+.nsba .seal{flex-shrink:0;width:48px;height:48px;border-radius:50%;border:1.5px solid var(--brass-ink);display:grid;place-items:center;font-family:var(--f-mono);font-size:10px;color:var(--brass-ink)}
+.nsba p{font-size:var(--s-2)}
+@media (max-width:900px){.eco{grid-template-columns:minmax(0,1fr)}.orbit{max-width:420px;margin:0 auto}.brands .t{display:none}.brands li{grid-template-columns:34px minmax(0,1fr)}}
+
+/* ---------- FOUNDER ---------- */
+.founder{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:center}
+.portrait{aspect-ratio:4/5;max-width:100%;border:1px solid var(--line-dim);position:relative;display:grid;place-items:center;overflow:hidden}
+.portrait .ini{font-family:var(--f-display);font-weight:900;font-size:clamp(7rem,16vw,12rem);color:transparent;-webkit-text-stroke:1.5px var(--line-dim);line-height:1}
+.portrait .cap-t{position:absolute;left:0;right:0;bottom:0;padding:12px 16px;border-top:1px solid var(--line-dim);display:flex;justify-content:space-between;gap:8px;background:var(--cyan-deep)}
+.corner{position:absolute;width:18px;height:18px;border-color:var(--brass);border-style:solid}
+.c1{top:10px;left:10px;border-width:1.5px 0 0 1.5px}
+.c2{top:10px;right:10px;border-width:1.5px 1.5px 0 0}
+blockquote{margin:0}
+.quote{font-family:var(--f-display);font-weight:700;font-size:clamp(1.9rem,3.6vw,3.1rem);line-height:1.05;text-transform:uppercase}
+.quote mark{background:none;color:var(--brass)}
+.attrib{margin-top:24px;display:flex;flex-direction:column;gap:4px}
+.attrib b{font-weight:600}
+.values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:40px;border-top:1px solid var(--line-dim)}
+.values div{padding:16px 16px 0 0}
+.values h3{font-size:1.25rem;font-weight:800}
+.values p{font-size:13px;color:var(--line-dim);margin-top:4px}
+@media (max-width:900px){.founder{grid-template-columns:minmax(0,1fr)}.portrait{max-width:340px}.values{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- CONTACT ---------- */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.contact h2{font-size:clamp(2.6rem,6vw,5rem);font-weight:800}
+.lines{margin-top:32px;border-top:1.5px solid var(--graphite)}
+.cline{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule)}
+.cline .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite-dim)}
+.cline .v{font-size:var(--s-4);font-weight:500;overflow-wrap:anywhere;user-select:all}
+.cline .v.plain{user-select:auto;font-size:var(--s-3);font-weight:400}
+.vellum .copy{border-color:var(--graphite-dim);color:var(--graphite)}
+.vellum .copy:hover{border-color:var(--brass-ink);color:var(--brass-ink)}
+form{border:1.5px solid var(--graphite);padding:28px;display:grid;gap:18px;background:#F3F6F7}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+label{display:grid;gap:6px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite-dim)}
+input,select,textarea{font-family:var(--f-body);font-size:var(--s-3);color:var(--graphite);background:transparent;border:0;border-bottom:1.5px solid var(--rule);padding:8px 0;border-radius:0;text-transform:none;letter-spacing:0;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{outline:none;border-bottom-color:var(--brass-ink)}
+select{color-scheme:light}
+textarea{resize:vertical;min-height:96px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips input{position:absolute;opacity:0;width:1px;height:1px}
+.chips label{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-size:13px;color:var(--graphite);border:1px solid var(--rule);padding:7px 12px;cursor:pointer;display:block;transition:all .2s}
+.chips input:checked+label{background:var(--graphite);color:var(--vellum);border-color:var(--graphite)}
+.chips input:focus-visible+label{outline:2px solid var(--brass-ink);outline-offset:2px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
+legend{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite-dim);margin-bottom:8px;padding:0}
+.form-msg{font-size:var(--s-2);color:var(--graphite);border-left:3px solid var(--brass-ink);padding:8px 12px;background:rgba(224,174,76,.15)}
+form .btn{justify-self:start;background:var(--graphite);border-color:var(--graphite);color:var(--vellum)}
+@media (max-width:900px){.contact{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.f2{grid-template-columns:minmax(0,1fr)}form{padding:20px}.cline{grid-template-columns:minmax(0,1fr) auto}.cline .k{grid-column:1/-1}}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--cyan-deep);border-top:1px solid var(--line-faint);overflow:hidden}
+footer .wrap{padding-block:56px calc(32px + env(safe-area-inset-bottom,0px));max-width:none}
+.foot-word{position:relative}
+.foot-word canvas{position:absolute;left:0;right:0;top:-40px;width:100%;height:calc(100% + 80px);pointer-events:none}
+.foot-big{font-family:var(--f-display);font-weight:900;font-size:clamp(2.4rem,10.5vw,11rem);line-height:.9;text-transform:uppercase;letter-spacing:0;white-space:nowrap}
+.foot-big .fw{display:inline-block;color:var(--line-dim)}
+.foot-big .fw[data-hollow]{color:transparent;-webkit-text-stroke:1.5px var(--line-dim)}
+.foot-word[data-gl-type] .fw{color:transparent;-webkit-text-stroke-color:transparent}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-top:32px;padding-top:18px;border-top:1px solid var(--line-faint);color:var(--line-dim)}
+.foot-row a{text-decoration:none}
+.foot-row a:hover{color:var(--line)}
+.foot-row nav{display:flex;flex-wrap:wrap;gap:18px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}
+  .ticker-in,.orbit .spin,.orbit .counter{animation:none}
+}
+</style>
+
+<!-- LOADER -->
+<div class="loader" id="loader" role="status" aria-live="polite" aria-label="Loading Blueprint Empire">
+  <div class="loader-half top"><div class="ls grid-bg">
+    <div class="ls-row mono"><span>Blueprint Empire Corp.</span><span class="hide-sm">Structure → Skills → Opportunity → Legacy</span></div>
+    <div class="ls-word"><p class="lw outline">Drafting</p><p class="lw fill" aria-hidden="true">Drafting</p><span class="scan"></span></div>
+    <div class="ls-row mono"><span data-status>Setting type</span><span><b data-pct>000</b> %</span></div>
+  </div></div>
+  <div class="loader-half bottom" aria-hidden="true"><div class="ls grid-bg">
+    <div class="ls-row mono"><span>Blueprint Empire Corp.</span><span class="hide-sm">Structure → Skills → Opportunity → Legacy</span></div>
+    <div class="ls-word"><p class="lw outline">Drafting</p><p class="lw fill">Drafting</p><span class="scan"></span></div>
+    <div class="ls-row mono"><span data-status>Setting type</span><span><b data-pct>000</b> %</span></div>
+  </div></div>
+</div>
+
+<canvas id="filmGL" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Blueprint Empire home">
+      <span class="mark" aria-hidden="true">BE</span>
+      <span class="brand-name">Blueprint Empire<small>CORPORATION</small></span>
+    </a>
+    <ul class="nav-links" id="navlinks">
+      <li><a href="#pillars">What we do</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#agencies">For agencies</a></li>
+      <li><a href="#ecosystem">Ecosystem</a></li>
+      <li><a href="#founder">Founder</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="sheet-tag" id="sheetTag" aria-live="polite">SHEET A-01</span>
+    <a class="btn" href="#contact">Partner with us</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navlinks">MENU</button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- A-01 HERO -->
+  <section class="hero grid-bg" id="hero" data-sheet="A-01" aria-labelledby="hero-title">
+    <canvas class="hero-gl" id="heroGL" aria-hidden="true"></canvas>
+    <div class="hero-in">
+      <div class="hero-top mono" data-reveal="settle">
+        <span>Government-ready training · Business development</span>
+        <ol class="hero-seq"><li>Structure</li><li>Skills</li><li>Opportunity</li><li>Legacy</li></ol>
+        <span class="hero-read" id="heroRead" aria-hidden="true">X 0000 · Y 0000</span>
+      </div>
+
+      <h1 class="hero-title" id="hero-title" aria-label="Building businesses. Developing leaders. Creating opportunities.">
+        <span class="hl" data-line data-dir="1"><span class="hw" data-atlas-word data-hollow>Building</span> <span class="hw" data-atlas-word>businesses.</span><span class="bl" data-baseline></span></span>
+        <span class="hl" data-line data-dir="-1"><span class="hw" data-atlas-word data-hollow>Developing</span> <span class="hw" data-atlas-word>leaders.</span><span class="bl" data-baseline></span></span>
+        <span class="hl" data-line data-dir="1"><span class="hw" data-atlas-word data-hollow>Creating</span> <span class="hw" data-atlas-word>opportunities.</span><span class="bl" data-baseline></span></span>
+      </h1>
+
+      <div class="hero-bottom">
+        <div data-reveal="settle" style="--i:1">
+          <p class="lede">Blueprint Empire Corp designs and delivers <strong>structured training programs, reentry education, workforce development and entrepreneurship curricula</strong> for federal, state and community agencies.</p>
+          <div class="cta-row">
+            <a class="btn" href="#programs">View program catalog
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+            <a class="btn ghost" href="https://drive.google.com/file/d/1ko47y1yXvt74UPXI-oVxgZGehfvgNwmD/view?usp=drivesdk" target="_blank" rel="noopener">Capability statement ↗</a>
+          </div>
+        </div>
+        <div class="titleblock" data-reveal="settle" style="--i:2">
+          <div><div class="k">Project</div><div class="v big">Blueprint Empire Corp.</div></div>
+          <div><div class="k">Prepared for</div><div class="v">Federal · State · Community</div></div>
+          <div><div class="k">UEI</div><div class="v">SM2VWN6B2A34</div></div>
+          <div><div class="k">Delivery</div><div class="v">Virtual / In person</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-in">
+      <span>Reentry education</span><span>Workforce development</span><span>Curriculum design</span><span>Entrepreneurship training</span><span>Financial literacy</span><span>Job readiness</span><span>Project coordination</span><span>Business startup support</span>
+      <span>Reentry education</span><span>Workforce development</span><span>Curriculum design</span><span>Entrepreneurship training</span><span>Financial literacy</span><span>Job readiness</span><span>Project coordination</span><span>Business startup support</span>
+    </div>
+  </div>
+
+  <!-- A-02 INTRO -->
+  <section class="sheet deep grid-bg on-blue" id="intro" data-sheet="A-02">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-02</b>What happens here</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>Every program is</span></span><span class="line" style="--i:1"><span>built from the ground up.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">Participants move through four stages, the same way a building rises from its footing. Scroll to raise the structure.</p>
+        </div>
+      </div>
+      <div class="intro">
+        <ol class="stages" id="stages">
+          <li data-reveal="settle"><h3>Structure</h3><p>Curriculum, lesson plans and instructor guidance are in place before the first session.</p></li>
+          <li data-reveal="settle" style="--i:1"><h3>Skills</h3><p>Instructor-led training in financial literacy, job readiness and entrepreneurship.</p></li>
+          <li data-reveal="settle" style="--i:2"><h3>Opportunity</h3><p>Resumes, interviews, pitches and business plans that open real doors.</p></li>
+          <li data-reveal="settle" style="--i:3"><h3>Legacy</h3><p>Certified graduates, measurable outcomes and businesses built to last.</p></li>
+        </ol>
+        <figure class="fig" id="elev" style="margin:0" aria-label="Elevation drawing of a civic building rising from its foundation">
+          <svg viewBox="0 0 520 440" aria-hidden="true">
+            <g data-stage="0">
+              <path class="ink thin" pathLength="1" d="M10 380 H510"/>
+              <path class="ink thin" pathLength="1" d="M20 380 l8 8 M40 380 l8 8 M60 380 l8 8 M460 380 l8 8 M480 380 l8 8 M500 380 l8 8"/>
+              <path class="ink" pathLength="1" d="M60 366 H460 V380 H60 Z"/>
+              <path class="ink" pathLength="1" d="M72 354 H448 V366 H72 Z"/>
+            </g>
+            <g data-stage="1">
+              <path class="ink" pathLength="1" d="M96 202 V346 M124 202 V346 M92 194 H128 V202 H92 Z M90 346 H130 V354 H90 Z"/>
+              <path class="ink" pathLength="1" d="M160 202 V346 M188 202 V346 M156 194 H192 V202 H156 Z M154 346 H194 V354 H154 Z"/>
+              <path class="ink" pathLength="1" d="M224 202 V346 M252 202 V346 M220 194 H256 V202 H220 Z M218 346 H258 V354 H218 Z"/>
+              <path class="ink" pathLength="1" d="M268 202 V346 M296 202 V346 M264 194 H300 V202 H264 Z M262 346 H302 V354 H262 Z"/>
+              <path class="ink" pathLength="1" d="M332 202 V346 M360 202 V346 M328 194 H364 V202 H328 Z M326 346 H366 V354 H326 Z"/>
+              <path class="ink" pathLength="1" d="M396 202 V346 M424 202 V346 M392 194 H428 V202 H392 Z M390 346 H430 V354 H390 Z"/>
+              <path class="ink thin" pathLength="1" d="M110 206 V342 M174 206 V342 M238 206 V342 M282 206 V342 M346 206 V342 M410 206 V342"/>
+            </g>
+            <g data-stage="2">
+              <path class="ink" pathLength="1" d="M80 170 H440 V194 H80 Z"/>
+              <path class="ink thin" pathLength="1" d="M80 182 H440"/>
+              <path class="ink thin" pathLength="1" d="M484 96 V380 M478 96 H490 M478 380 H490"/>
+            </g>
+            <g data-stage="3">
+              <path class="ink" pathLength="1" d="M70 170 L260 96 L450 170 Z"/>
+              <path class="fillin" data-fill d="M118 162 L260 107 L402 162 Z"/>
+              <path class="ink thin" pathLength="1" d="M118 162 L260 107 L402 162 Z"/>
+              <path class="ink thin" pathLength="1" d="M70 76 H450 M70 70 V82 M450 70 V82"/>
+              <path class="ink acc" pathLength="1" d="M273 146 H330 L348 128"/>
+              <circle class="ink acc" pathLength="1" cx="260" cy="146" r="13"/>
+            </g>
+            <path class="cl" d="M260 90 V400"/>
+            <text x="236" y="66">38'-0"</text>
+            <text x="496" y="244" transform="rotate(90 496 244)">28'-6"</text>
+            <text x="256" y="150" class="acc-t">A</text>
+            <text x="352" y="126" class="acc-t">LEGACY</text>
+            <text x="62" y="408">SOUTH ELEVATION</text>
+            <text x="62" y="424">SCALE 1/8" = 1'-0"</text>
+            <text x="330" y="408">DWG NO. BE-001</text>
+            <text x="330" y="424">REV. 2026</text>
+          </svg>
+          <figcaption class="figcap mono"><span>Fig. 01 — South elevation</span><span>Stage <b id="stageRead">01</b> / 04</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-03 PILLARS -->
+  <section class="sheet vellum" id="pillars" data-sheet="A-03">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-03</b>What we do</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>Three foundations,</span></span><span class="line" style="--i:1"><span>one structure.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">A training and business development partner for agencies running high-impact community initiatives. Hover each figure to bring it to life.</p>
+        </div>
+      </div>
+      <div class="pillars" id="pillarGrid">
+        <canvas id="pillarGL" aria-hidden="true"></canvas>
+        <article class="pillar" data-reveal="settle">
+          <div class="plate" data-plate><span class="mono">Fig. 3.1 · Rising contours</span></div>
+          <h3>Workforce development</h3>
+          <p>Employment preparation that builds professional skills and moves participants into real job opportunities.</p>
+          <ul><li>Job readiness training</li><li>Resume, application and interview skills</li><li>Retention and career advancement pathways</li></ul>
+        </article>
+        <article class="pillar" data-reveal="settle" style="--i:1">
+          <div class="plate" data-plate><span class="mono">Fig. 3.2 · Idea to market</span></div>
+          <h3>Entrepreneurship</h3>
+          <p>Training and startup support that helps people launch, structure and grow a business of their own.</p>
+          <ul><li>Business startup support</li><li>Pitch and presentation development</li><li>Financial literacy and credit building</li></ul>
+        </article>
+        <article class="pillar" data-reveal="settle" style="--i:2">
+          <div class="plate" data-plate><span class="mono">Fig. 3.3 · Community network</span></div>
+          <h3>Government &amp; community programs</h3>
+          <p>Contract-ready curricula with structured modules, measurable outcomes and agency reporting.</p>
+          <ul><li>Reentry education for returning citizens</li><li>Federal, state and local agency delivery</li><li>Outcome tracking and certificates</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-04 PROGRAMS -->
+  <section class="sheet on-blue grid-bg" id="programs" data-sheet="A-04">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-04</b>Program catalog</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>Curricula built</span></span><span class="line" style="--i:1"><span>to a schedule.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">Four ready-to-deliver programs, drawn to scale by week. Open any program to see its structure, what agencies receive and the full curriculum packet.</p>
+        </div>
+      </div>
+
+      <div class="schedule" data-reveal="settle">
+        <div class="sch-scale">
+          <div class="lab mono">Program</div>
+          <div class="weeks"><span>WK 1</span><span>WK 2</span><span>WK 3</span><span>WK 4</span><span>WK 5</span><span>WK 6</span><span>WK 7</span><span>WK 8</span></div>
+        </div>
+
+        <div class="sch-row">
+          <button class="sch-btn" aria-expanded="true" aria-controls="p1">
+            <div class="sch-name"><span class="plus" aria-hidden="true">+</span><div><h3>Business Reentry Academy™</h3><span class="mono">Reentry · Workforce · 8 weeks</span></div></div>
+            <div class="sch-track"><div class="bar" data-reveal="rule" style="grid-column:1/9">8 WK</div></div>
+          </button>
+          <div class="sch-detail" id="p1"><div>
+            <div class="detail-in">
+              <div>
+                <p>A complete reentry and workforce development curriculum for returning citizens, justice-involved individuals and agency reentry initiatives. The packet includes learning objectives, weekly lesson plans, instructor guidance, workforce skill-building activities, agency reporting requirements and measurable outcomes, prepared for agency review, compliance verification and procurement evaluation.</p>
+                <div class="dl-row">
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Government%20pdf.pdf" target="_blank" rel="noopener">Curriculum packet ↗</a>
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Certificate%20pdf.pdf" target="_blank" rel="noopener">Certificate sample ↗</a>
+                </div>
+              </div>
+              <div>
+                <h4>Program includes</h4>
+                <ul class="incl"><li>Full 8-week curriculum</li><li>Instructor-led training</li><li>Workbooks &amp; journals</li><li>Outcome tracking &amp; reporting</li><li>Certificates of completion</li><li>Virtual or in-person delivery</li></ul>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="sch-row">
+          <button class="sch-btn" aria-expanded="false" aria-controls="p2">
+            <div class="sch-name"><span class="plus" aria-hidden="true">+</span><div><h3>Financial Literacy Boot Camp</h3><span class="mono">Intensive · 4 weeks</span></div></div>
+            <div class="sch-track"><div class="bar" data-reveal="rule" style="grid-column:1/5;--i:1">4 WK</div></div>
+          </button>
+          <div class="sch-detail" id="p2"><div>
+            <div class="detail-in">
+              <div>
+                <p>An accelerated program that builds financial stability, confidence and long-term independence. It supports returning citizens, youth and justice-involved individuals by improving financial decision-making, budgeting skills and income growth strategies, with credit-building activities and financial assessments.</p>
+                <div class="dl-row">
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Financial%20literacy%20four%20week%20course.pdf" target="_blank" rel="noopener">Curriculum packet ↗</a>
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Financial%20literacy%20certificate%20of%20completion.pdf" target="_blank" rel="noopener">Certificate sample ↗</a>
+                </div>
+              </div>
+              <div>
+                <h4>Program includes</h4>
+                <ul class="incl"><li>Full 4-week curriculum</li><li>Instructor-led training</li><li>Financial worksheets &amp; journal</li><li>Outcome tracking &amp; reporting</li><li>Certificate of completion</li><li>Virtual or in-person delivery</li></ul>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="sch-row">
+          <button class="sch-btn" aria-expanded="false" aria-controls="p3">
+            <div class="sch-name"><span class="plus" aria-hidden="true">+</span><div><h3>Job Readiness &amp; Workforce Development</h3><span class="mono">Employment prep · 4–6 weeks</span></div></div>
+            <div class="sch-track"><div class="bar" data-reveal="rule" style="grid-column:1/5;--i:2">4 WK</div><div class="bar ext" data-reveal="rule" style="grid-column:5/7;--i:3"></div></div>
+          </button>
+          <div class="sch-detail" id="p3"><div>
+            <div class="detail-in">
+              <div>
+                <p>Structured employment preparation that helps participants gain workforce skills, build a resume, improve communication and prepare for real job opportunities, including how to discuss background or employment gaps professionally.</p>
+                <div class="dl-row">
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Job%20readiness.pdf" target="_blank" rel="noopener">Curriculum packet ↗</a>
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Job%20readiness%20certificate%20of%20completion.pdf" target="_blank" rel="noopener">Certificate sample ↗</a>
+                </div>
+              </div>
+              <div>
+                <h4>Weekly structure</h4>
+                <ol class="wk">
+                  <li><b>WK 1</b>Professional identity &amp; workplace expectations</li>
+                  <li><b>WK 2</b>Resume building &amp; job application skills</li>
+                  <li><b>WK 3</b>Interviewing &amp; communication skills</li>
+                  <li><b>WK 4</b>Job search, retention &amp; advancement</li>
+                </ol>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="sch-row">
+          <button class="sch-btn" aria-expanded="false" aria-controls="p4">
+            <div class="sch-name"><span class="plus" aria-hidden="true">+</span><div><h3>Pitch Game™</h3><span class="mono">Entrepreneurship · 8 weeks · 16–20 hrs</span></div></div>
+            <div class="sch-track"><div class="bar" data-reveal="rule" style="grid-column:1/9;--i:3">8 WK</div></div>
+          </button>
+          <div class="sch-detail" id="p4"><div>
+            <div class="detail-in">
+              <div>
+                <p>An entrepreneurship and presentation program that takes participants from a business idea, nonprofit concept or program proposal to a polished 3–5 minute pitch and a professional 8-slide deck. Standard cohorts run 10–30 participants, up to 40. Materials include a student workbook, instructor guide, templates, assessment forms and attendance sheets.</p>
+                <div class="dl-row">
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Pitch%20game%20curriculum%20overview.pdf" target="_blank" rel="noopener">Curriculum overview ↗</a>
+                  <a class="dl" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Pitch%20game%20certificate%20of%20completion.pdf" target="_blank" rel="noopener">Certificate sample ↗</a>
+                </div>
+              </div>
+              <div>
+                <h4>Weekly structure</h4>
+                <ol class="wk">
+                  <li><b>WK 1</b>What a pitch is: structure &amp; mindset</li>
+                  <li><b>WK 2</b>Idea development &amp; value proposition</li>
+                  <li><b>WK 3</b>8-slide pitch deck structure</li>
+                  <li><b>WK 4</b>Storytelling &amp; confidence techniques</li>
+                  <li><b>WK 5</b>Visual slide creation</li>
+                  <li><b>WK 6</b>Voice, tone, pace &amp; stage presence</li>
+                  <li><b>WK 7</b>Final pitch deck polishing</li>
+                  <li><b>WK 8</b>Final presentation &amp; certification</li>
+                </ol>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <div class="sch-note mono">
+        <span><i class="sw"></i>Core weeks</span><span><i class="sw ext"></i>Optional extension</span><span>Every program: instructor-led · outcome reporting · certificate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-05 CAPABILITIES -->
+  <section class="sheet vellum" id="capabilities" data-sheet="A-05">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-05</b>Capabilities</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>From curriculum</span></span><span class="line" style="--i:1"><span>to coordination.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">Beyond our catalog, we build custom training and support the people who run programs. Scalable, curriculum-based solutions designed around your mission.</p>
+        </div>
+      </div>
+      <div class="caps">
+        <div class="cap" data-reveal="settle"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h12l4 4v12H4z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg></span><h3>Instructional design</h3><p>Learning objectives, lesson plans and instructor guides built for consistent delivery.</p></div>
+        <div class="cap" data-reveal="settle" style="--i:1"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12"/><path d="M8 20h8M12 16v4"/><path d="M10 8l4 2-4 2z"/></svg></span><h3>Digital learning materials</h3><p>Training modules, workbooks, journals, worksheets and templates in print or digital form.</p></div>
+        <div class="cap" data-reveal="settle" style="--i:2"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 20h18M6 20V10l6-5 6 5v10"/><path d="M10 20v-5h4v5"/></svg></span><h3>Business startup support</h3><p>Structure, branding and launch guidance for new entrepreneurs and small businesses.</p></div>
+        <div class="cap" data-reveal="settle"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 2 6 5.5"/></svg></span><h3>Workforce programs</h3><p>Job readiness, reentry and skills training tailored to the population you serve.</p></div>
+        <div class="cap" data-reveal="settle" style="--i:1"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 15l2 2 4-4"/></svg></span><h3>Project coordination</h3><p>Scheduling, cohort management and delivery coordination from kickoff to graduation.</p></div>
+        <div class="cap" data-reveal="settle" style="--i:2"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3>Administrative support</h3><p>Attendance tracking, assessments, outcome reporting and documentation for agency records.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-06 AGENCIES -->
+  <section class="sheet on-blue grid-bg" id="agencies" data-sheet="A-06">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-06</b>For agencies</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>Ready for</span></span><span class="line" style="--i:1"><span>procurement.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">Contracting data, classification codes and review documents in one place, so your team can evaluate us quickly.</p>
+        </div>
+      </div>
+
+      <figure class="fig-plate">
+        <div class="plate-box" id="plateBox" data-reveal="sweep">
+          <canvas id="plateGL" aria-hidden="true"></canvas>
+          <div class="plate-tags mono"><span>Fig. 06 — Mission × need</span><span>Reinforcement <b id="plateRead">— %</b></span></div>
+        </div>
+        <figcaption>Two sources, one field: your agency's mission and your community's need. Move across the plate. Where they meet in phase, outcomes reinforce each other; between them, effort cancels out.</figcaption>
+      </figure>
+
+      <div class="agency">
+        <div class="spec" data-reveal="settle">
+          <div class="spec-row"><div class="k">Legal entity</div><div>Blueprint Empire Corporation</div></div>
+          <div class="spec-row"><div class="k">UEI</div><div class="uei"><code>SM2VWN6B2A34</code><button class="copy" data-copy="SM2VWN6B2A34">Copy</button></div></div>
+          <div class="spec-row"><div class="k">Contracting contact</div><div>Victoria Harris, CEO · Contract Training Provider</div></div>
+          <div class="spec-row"><div class="k">NAICS</div><div>
+            <ul class="naics">
+              <li><b>611430</b>Professional &amp; management development training</li>
+              <li><b>624310</b>Vocational rehabilitation services</li>
+              <li><b>611699</b>All other miscellaneous schools &amp; instruction</li>
+              <li><b>541611</b>Administrative &amp; general management consulting</li>
+            </ul>
+          </div></div>
+          <div class="spec-row"><div class="k">Capabilities</div><div>Reentry training · workforce development · entrepreneurship · job readiness · financial literacy</div></div>
+          <div class="spec-row"><div class="k">Membership</div><div>National Small Business Association (NSBA) Leadership Council</div></div>
+        </div>
+        <div data-reveal="settle" style="--i:1">
+          <ol class="process">
+            <li><div><h3>Scope the population</h3><p>We confirm who you serve, cohort size, delivery format and the outcomes your agency reports on.</p></div></li>
+            <li><div><h3>Match or adapt a curriculum</h3><p>Start from a catalog program or have us design structured modules for your initiative.</p></div></li>
+            <li><div><h3>Deliver, virtual or in person</h3><p>Instructor-led sessions with workbooks, attendance sheets and assessments.</p></div></li>
+            <li><div><h3>Report measurable outcomes</h3><p>Outcome tracking, evaluation tools and certificates of completion for every graduate.</p></div></li>
+          </ol>
+          <div class="docs">
+            <a class="btn" href="https://drive.google.com/file/d/1ko47y1yXvt74UPXI-oVxgZGehfvgNwmD/view?usp=drivesdk" target="_blank" rel="noopener">Capability statement ↗</a>
+            <a class="btn ghost" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Government%20price%20sheet.pdf" target="_blank" rel="noopener">Price sheet ↗</a>
+            <a class="btn ghost" href="https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/Government%20service%20menu.pdf" target="_blank" rel="noopener">Federal service menu ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-07 ECOSYSTEM -->
+  <section class="sheet vellum" id="ecosystem" data-sheet="A-07">
+    <div class="wrap">
+      <div class="sheet-head">
+        <div class="sheet-no" data-reveal="rule">Sheet<b>A-07</b>Ecosystem</div>
+        <div>
+          <h2 data-reveal="mask"><span class="line"><span>One corporation.</span></span><span class="line" style="--i:1"><span>Seven ways in.</span></span></h2>
+          <p data-reveal="settle" style="--i:2">Each brand reaches people at a different point, from reentry to pitching a first business to building wealth across generations.</p>
+        </div>
+      </div>
+      <div class="eco">
+        <div class="orbit" data-reveal="settle" aria-hidden="true">
+          <svg viewBox="0 0 500 500">
+            <circle class="ring" cx="250" cy="250" r="190"/>
+            <circle class="ring d" cx="250" cy="250" r="120"/>
+            <circle class="ring d" cx="250" cy="250" r="236"/>
+            <g class="spin" id="orbitSpin"></g>
+            <g class="core"><rect x="196" y="196" width="108" height="108"/><text x="250" y="258">EMPIRE</text></g>
+          </svg>
+        </div>
+        <div>
+          <ol class="brands" id="brands">
+            <li data-reveal="settle"><span class="n">01</span><h3>Blueprint Empire™ Corporation</h3><span class="t">Business development &amp; strategic growth</span></li>
+            <li data-reveal="settle" style="--i:1"><span class="n">02</span><h3>From Convict to Corporate Inc.</h3><span class="t">Workforce development &amp; reentry services</span></li>
+            <li data-reveal="settle" style="--i:2"><span class="n">03</span><h3>Blueprint Workforce Alliance™</h3><span class="t">Employer &amp; community partnerships</span></li>
+            <li data-reveal="settle" style="--i:3"><span class="n">04</span><h3>The Pitch Room™</h3><span class="t">Business &amp; pitch development</span></li>
+            <li data-reveal="settle" style="--i:4"><span class="n">05</span><h3>Mommie &amp; Me Podcast™</h3><span class="t">Family &amp; entrepreneurship conversations</span></li>
+            <li data-reveal="settle" style="--i:5"><span class="n">06</span><h3>Blueprint Empire Blog™</h3><span class="t">Education &amp; business resources</span></li>
+            <li data-reveal="settle" style="--i:6"><span class="n">07</span><h3>Community &amp; Workforce Partnerships</h3><span class="t">Strategic community engagement</span></li>
+          </ol>
+          <div class="nsba" data-reveal="settle">
+            <span class="seal">NSBA</span>
+            <p>Proud member of the National Small Business Association Leadership Council, advocating for entrepreneurs, workforce development and small business growth nationwide.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-08 FOUNDER -->
+  <section class="sheet on-blue grid-bg" id="founder" data-sheet="A-08">
+    <div class="wrap">
+      <div class="founder">
+        <div class="portrait" data-reveal="sweep">
+          <span class="corner c1"></span><span class="corner c2"></span>
+          <span class="ini" aria-hidden="true">VH</span>
+          <div class="cap-t mono"><span>Victoria Harris</span><span style="color:var(--brass)">Founder &amp; CEO</span></div>
+        </div>
+        <div>
+          <div class="sheet-no" data-reveal="rule" style="color:var(--brass);max-width:200px;margin-bottom:28px">Sheet<b>A-08</b>Founder</div>
+          <blockquote data-reveal="mask">
+            <p class="quote"><span class="line"><span>“Every visionary deserves</span></span><span class="line" style="--i:1"><span><mark>a clear path</mark> to success.”</span></span></p>
+          </blockquote>
+          <div class="attrib" data-reveal="settle"><b>Victoria Harris</b><span class="mono" style="color:var(--line-dim)">Founder &amp; CEO · Author &amp; speaker</span></div>
+          <p data-reveal="settle" style="--i:1;margin-top:24px;color:var(--line-dim);max-width:58ch">Victoria built Blueprint Empire after facing challenges, rebuilding and learning firsthand what structure makes possible. The company exists to remove barriers, so people with ambition get the direction, tools and support to turn it into income and impact.</p>
+          <div class="values" data-reveal="settle" style="--i:2">
+            <div><h3>Innovation</h3><p>Set the standard, not the trend.</p></div>
+            <div><h3>Excellence</h3><p>Quality in every deliverable.</p></div>
+            <div><h3>Access</h3><p>High-level tools for everyone.</p></div>
+            <div><h3>Legacy</h3><p>Built to last for generations.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A-09 CONTACT -->
+  <section class="sheet vellum" id="contact" data-sheet="A-09">
+    <div class="wrap">
+      <div class="contact">
+        <div>
+          <div class="sheet-no" data-reveal="rule" style="max-width:200px;margin-bottom:28px">Sheet<b>A-09</b>Contact</div>
+          <h2 data-reveal="mask"><span class="line"><span>Let's draw up</span></span><span class="line" style="--i:1"><span>your program.</span></span></h2>
+          <p data-reveal="settle" style="margin-top:18px;color:var(--graphite-dim);max-width:46ch">Government contracts, program inquiries and referral partnerships. Sessions are available in person or virtually.</p>
+          <div class="lines" data-reveal="settle" style="--i:1">
+            <div class="cline"><span class="k">Email</span><span class="v">blueprint@theblueprintempire.co</span><button class="copy" data-copy="blueprint@theblueprintempire.co">Copy</button></div>
+            <div class="cline"><span class="k">Phone</span><span class="v">(307) 269-9324</span><button class="copy" data-copy="(307) 269-9324">Copy</button></div>
+            <div class="cline"><span class="k">Offices</span><span class="v plain">Houston, TX 77004 · Denham Springs, LA</span><span></span></div>
+            <div class="cline"><span class="k">Hours</span><span class="v plain">9:00 AM – 5:00 PM</span><span></span></div>
+          </div>
+          <div class="dl-row" style="margin-top:22px">
+            <a class="dl" href="https://docs.google.com/forms/u/0/d/103gqKZBbqk9FexDz_5-eN45k65OQdQ2RRMSbcwg2Zfg/viewform" target="_blank" rel="noopener">Become a referral partner ↗</a>
+          </div>
+        </div>
+
+        <form id="inq" data-reveal="settle" style="--i:1" novalidate>
+          <div class="f2">
+            <label for="f-name">Name<input id="f-name" name="name" autocomplete="name" required></label>
+            <label for="f-org">Agency / organization<input id="f-org" name="org" autocomplete="organization"></label>
+          </div>
+          <div class="f2">
+            <label for="f-email">Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
+            <label for="f-type">Inquiry type
+              <select id="f-type" name="type">
+                <option>Government contract</option>
+                <option>Community program</option>
+                <option>Business development</option>
+                <option>Referral partnership</option>
+              </select>
+            </label>
+          </div>
+          <fieldset>
+            <legend>Programs of interest</legend>
+            <div class="chips">
+              <input type="checkbox" id="c1" value="Business Reentry Academy"><label for="c1">Reentry Academy</label>
+              <input type="checkbox" id="c2" value="Financial Literacy Boot Camp"><label for="c2">Financial Literacy</label>
+              <input type="checkbox" id="c3" value="Job Readiness"><label for="c3">Job Readiness</label>
+              <input type="checkbox" id="c4" value="Pitch Game"><label for="c4">Pitch Game</label>
+              <input type="checkbox" id="c5" value="Custom curriculum"><label for="c5">Custom curriculum</label>
+            </div>
+          </fieldset>
+          <label for="f-msg">Project details<textarea id="f-msg" name="msg" placeholder="Population served, cohort size, timeline, delivery format"></textarea></label>
+          <div class="form-msg" id="formMsg" hidden></div>
+          <button class="btn" type="submit">Send inquiry
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="wrap">
+    <div class="foot-word" id="footWord">
+      <canvas id="footGL" aria-hidden="true"></canvas>
+      <div class="foot-big" aria-label="Blueprint Empire"><span class="fl"><span class="fw" data-atlas-word>Blueprint</span> <span class="fw" data-atlas-word data-hollow>Empire</span><span class="bl" data-baseline></span></span></div>
+    </div>
+    <div class="foot-row mono">
+      <span>© 2026 Blueprint Empire Corporation · UEI SM2VWN6B2A34</span>
+      <nav aria-label="Social">
+        <a href="https://www.facebook.com/share/1GjMXgEYjz/" target="_blank" rel="noopener">Facebook ↗</a>
+        <a href="https://www.instagram.com/authorvictoriaharris" target="_blank" rel="noopener">Instagram ↗</a>
+        <a href="#top">Back to the footing ↑</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const root=document.documentElement;
+const MOTION=root.classList.contains('motion');
+const COARSE=matchMedia('(hover: none), (pointer: coarse)').matches;
+const HAS_GSAP=!!window.gsap, HAS_ST=HAS_GSAP&&!!window.ScrollTrigger;
+if(HAS_ST) gsap.registerPlugin(ScrollTrigger);
+
+/* ================= TICKER (one frame loop for GL, tweens and Lenis) ================= */
+const Ticker=(()=>{
+  const fns=new Set(); let last=performance.now();
+  const step=now=>{const dt=Math.min(Math.max((now-last)/1000,0),0.1); last=now; fns.forEach(f=>f(dt,now/1000));};
+  if(HAS_GSAP){gsap.ticker.add(()=>step(performance.now()));}
+  else{const loop=n=>{step(n);requestAnimationFrame(loop)};requestAnimationFrame(loop);}
+  return {add:f=>fns.add(f),remove:f=>fns.delete(f)};
+})();
+const ease={inOut:t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, out:t=>1-Math.pow(1-t,3)};
+function tween(o,k,to,dur,delay=0,fn=ease.inOut){const from=o[k];let t=-delay;const f=dt=>{t+=dt;if(t<0)return;const p=Math.min(1,t/dur);o[k]=from+(to-from)*fn(p);if(p>=1)Ticker.remove(f);};Ticker.add(f);}
+
+/* ================= BOOT ================= */
+const Boot={total:0,settled:0,finished:false,cbs:[],
+  task(p){this.total++;Promise.resolve(p).catch(()=>{}).finally(()=>this.settled++);},
+  onDone(cb){this.finished?cb():this.cbs.push(cb);},
+  finish(){if(this.finished)return;this.finished=true;root.classList.add('booted');this.cbs.splice(0).forEach(c=>{try{c()}catch(e){console.error(e)}});}};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const fontsReady=Promise.race([
+  Promise.all([document.fonts.load('800 100px "Big Shoulders Display"'),document.fonts.load('900 100px "Big Shoulders Display"'),document.fonts.load('400 14px "IBM Plex Mono"')]).then(()=>document.fonts.ready),
+  wait(3500)]).catch(()=>{});
+
+/* ================= SMOOTH SCROLL ================= */
+let lenis=null;
+if(MOTION&&window.Lenis){
+  try{
+    lenis=new Lenis({lerp:0.1,smoothWheel:true});
+    if(HAS_ST) lenis.on('scroll',ScrollTrigger.update);
+    if(HAS_GSAP){gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);}
+    else{const r=t=>{lenis.raf(t);requestAnimationFrame(r)};requestAnimationFrame(r);}
+  }catch(e){lenis=null;}
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]'); if(!a)return;
+  const id=a.getAttribute('href'); const el=id==='#top'?document.body:$(id); if(!el)return;
+  e.preventDefault();
+  if(lenis) lenis.scrollTo(id==='#top'?0:el,{offset:-70,duration:1.4});
+  else window.scrollTo({top:id==='#top'?0:el.getBoundingClientRect().top+scrollY-70,behavior:MOTION?'smooth':'auto'});
+});
+
+/* ================= WEBGL MINI-ENGINE ================= */
+const VS=`#version 300 es
+in vec2 aPos; out vec2 vUv;
+void main(){ vUv=aPos*0.5+0.5; gl_Position=vec4(aPos,0.0,1.0); }`;
+const FS_HEAD=`#version 300 es
+precision highp float;
+in vec2 vUv;
+out vec4 fragColor;
+`;
+function makeGL(canvas,{dprCap=2,scale=1}={}){
+  let gl=null;
+  try{gl=canvas.getContext('webgl2',{alpha:true,antialias:false,premultipliedAlpha:true,powerPreference:'high-performance'});}catch(e){}
+  if(!gl) return null;
+  const float=!!gl.getExtension('EXT_color_buffer_float');
+  const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+  gl.disable(gl.BLEND); gl.disable(gl.DEPTH_TEST);
+  const compile=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error('[shader]',gl.getShaderInfoLog(s));return null;}return s;};
+  let unit=0;
+  const E={gl,canvas,float,dpr:1,visible:true,onResize:null,
+    program(fs){
+      const v=compile(gl.VERTEX_SHADER,VS), f=compile(gl.FRAGMENT_SHADER,FS_HEAD+fs);
+      if(!v||!f) return null;
+      const p=gl.createProgram(); gl.attachShader(p,v); gl.attachShader(p,f); gl.bindAttribLocation(p,0,'aPos'); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.error('[link]',gl.getProgramInfoLog(p));return null;}
+      const u={}; const n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);
+      for(let i=0;i<n;i++){const info=gl.getActiveUniform(p,i);u[info.name.replace(/\[0\]$/,'')]=gl.getUniformLocation(p,info.name);}
+      return {p,u};
+    },
+    use(pr){gl.useProgram(pr.p);unit=0;return pr;},
+    f(pr,name,...v){const l=pr.u[name];if(l==null)return;[gl.uniform1f,gl.uniform2f,gl.uniform3f,gl.uniform4f][v.length-1].call(gl,l,...v);},
+    fv(pr,name,size,arr){const l=pr.u[name];if(l==null)return;[null,gl.uniform1fv,gl.uniform2fv,gl.uniform3fv,gl.uniform4fv][size].call(gl,l,arr);},
+    tex(pr,name,t){const l=pr.u[name];if(l==null)return;gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);gl.uniform1i(l,unit);unit++;},
+    target(w,h){
+      const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA16F,w,h,0,gl.RGBA,gl.HALF_FLOAT,null);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      const fb=gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,fb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,t,0);
+      gl.viewport(0,0,w,h); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+      return {tex:t,fb,w,h};
+    },
+    pair(w,h){let a=E.target(w,h),b=E.target(w,h);return {get read(){return a},get write(){return b},swap(){const c=a;a=b;b=c;},all:()=>[a,b]};},
+    clear(t){gl.bindFramebuffer(gl.FRAMEBUFFER,t.fb);gl.viewport(0,0,t.w,t.h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);},
+    draw(to){gl.bindFramebuffer(gl.FRAMEBUFFER,to?to.fb:null);gl.viewport(0,0,to?to.w:canvas.width,to?to.h:canvas.height);gl.drawArrays(gl.TRIANGLES,0,3);},
+    imageTex(src){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;},
+    resize(){const d=Math.min(devicePixelRatio||1,dprCap)*scale;E.dpr=d;const w=Math.max(1,Math.round(canvas.clientWidth*d)),h=Math.max(1,Math.round(canvas.clientHeight*d));
+      if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;return true;}return false;}
+  };
+  E.resize();
+  new ResizeObserver(()=>{if(E.resize()&&E.onResize)E.onResize();}).observe(canvas);
+  new IntersectionObserver(([e])=>{E.visible=e.isIntersecting;},{rootMargin:'120px'}).observe(canvas);
+  return E;
+}
+
+/* ================= GLSL CHUNKS ================= */
+const NOISE=`
+vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}
+float snoise(vec2 v){
+  const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+  vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);
+  vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+  vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod(i,289.0);
+  vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+  vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0); m=m*m; m=m*m;
+  vec3 x=2.0*fract(p*C.www)-1.0; vec3 h=abs(x)-0.5; vec3 ox=floor(x+0.5); vec3 a0=x-ox;
+  m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+  vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw; return 130.0*dot(m,g);
+}
+float fbm3(vec2 p){float v=0.5*snoise(p);v+=0.25*snoise(p*2.03+17.1);v+=0.125*snoise(p*4.01+31.7);return v;}
+float hash12(vec2 p){vec3 p3=fract(vec3(p.xyx)*0.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
+`;
+// Display type sampled from a glyph atlas placed every frame from the live DOM.
+const GLYPH=n=>`
+uniform sampler2D uFill; uniform vec2 uAtlasSize; uniform vec4 uWords[${n}]; uniform vec3 uAtlas[${n}];
+float glyphWord=-1.0; vec2 glyphLocal=vec2(0.0); float glyphHollow=0.0;
+vec2 glyph(vec2 p){
+  vec2 g=vec2(0.0); glyphWord=-1.0; glyphHollow=0.0;
+  for(int i=0;i<${n};i++){
+    vec2 q=p-uWords[i].xy;
+    if(q.x>=0.0&&q.y>=0.0&&q.x<uWords[i].z&&q.y<uWords[i].w){
+      vec2 at=uAtlas[i].xy+q;
+      float f=textureLod(uFill,at/uAtlasSize,0.0).a; float shown=f; float r=uAtlas[i].z;
+      if(r>0.0){
+        float hi=f, lo=f;
+        for(int k=0;k<8;k++){float ang=float(k)*0.7853982;float s=textureLod(uFill,(at+vec2(cos(ang),sin(ang))*r)/uAtlasSize,0.0).a;hi=max(hi,s);lo=min(lo,s);}
+        shown=clamp(hi-lo,0.0,1.0);
+      }
+      if(max(shown,f)>0.0||glyphWord<0.0){glyphWord=float(i);glyphLocal=q/uWords[i].zw;glyphHollow=r>0.0?1.0:0.0;}
+      g=max(g,vec2(shown,f));
+    }
+  }
+  return g;
+}`;
+
+/* ================= GLYPH ATLAS ================= */
+function atlasWords(rootEl){return $$('[data-atlas-word]',rootEl).map(word=>({word,baseline:word.parentElement.querySelector('[data-baseline]')}));}
+function buildAtlas(words,pr){
+  const pad=Math.ceil(16*pr); const sc=document.createElement('canvas').getContext('2d');
+  const specs=words.map(({word})=>{
+    const cs=getComputedStyle(word); const size=parseFloat(cs.fontSize)*pr;
+    const font=`${cs.fontStyle} ${cs.fontWeight} ${size}px ${cs.fontFamily}`;
+    const tracking=(parseFloat(cs.letterSpacing)||0)*pr;
+    const raw=(word.textContent||'').trim(); const text=cs.textTransform==='uppercase'?raw.toUpperCase():raw;
+    const hollow=word.hasAttribute('data-hollow');
+    const stroke=(parseFloat(cs.getPropertyValue('-webkit-text-stroke-width'))||1.5)*pr;
+    sc.font=font; const chars=[...text];
+    const xs=chars.map((_,i)=>sc.measureText(chars.slice(0,i).join('')).width+tracking*i);
+    const m=sc.measureText(text); const width=m.width+tracking*chars.length;
+    const ascent=Math.ceil(m.fontBoundingBoxAscent??size), descent=Math.ceil(m.fontBoundingBoxDescent??size*.25);
+    return {font,chars,xs,width,ascent,descent,hollow,stroke};
+  });
+  const w=Math.ceil(Math.max(...specs.map(s=>s.width))+pad*2); const rows=[]; let y=0;
+  specs.forEach(s=>{const h=s.ascent+s.descent+pad*2;rows.push({ay:y,w,h,ascent:s.ascent});y+=h;});
+  const fill=document.createElement('canvas'); fill.width=w; fill.height=Math.ceil(y);
+  const fc=fill.getContext('2d'); fc.fillStyle='#fff'; fc.textBaseline='alphabetic';
+  specs.forEach((s,i)=>{const base=rows[i].ay+pad+s.ascent;fc.font=s.font;s.chars.forEach((ch,j)=>fc.fillText(ch,pad+s.xs[j],base));});
+  return {fill,rows,pad,outline:specs.map(s=>s.hollow?s.stroke/2:0)};
+}
+function placeWords(words,atlas,cr,pr,W,A){
+  words.forEach(({word,baseline},i)=>{
+    const r=atlas.rows[i]; const left=word.getBoundingClientRect().left-cr.left; const base=baseline.getBoundingClientRect().bottom-cr.top;
+    W.set([left*pr-atlas.pad,base*pr-r.ascent-atlas.pad,r.w,r.h],i*4); A.set([0,r.ay,atlas.outline[i]],i*3);
+  });
+}
+
+/* ================= STABLE-FLUIDS SOLVER (heat as dye) ================= */
+const FL={
+advect:`uniform sampler2D uSource; uniform sampler2D uVelocity; uniform float uDt; uniform float uDissipation;
+void main(){ vec2 c=vUv-uDt*texture(uVelocity,vUv).xy; fragColor=texture(uSource,c)*uDissipation; }`,
+splat:`uniform sampler2D uTarget; uniform vec2 uPoint; uniform vec3 uValue; uniform float uRadius; uniform float uAspect;
+void main(){ vec2 p=vUv-uPoint; p.x*=uAspect; vec3 base=texture(uTarget,vUv).xyz; fragColor=vec4(base+uValue*exp(-dot(p,p)/uRadius),1.0); }`,
+curl:`uniform sampler2D uVelocity; uniform vec2 uTexel;
+void main(){ float l=texture(uVelocity,vUv-vec2(uTexel.x,0.0)).y; float r=texture(uVelocity,vUv+vec2(uTexel.x,0.0)).y;
+ float b=texture(uVelocity,vUv-vec2(0.0,uTexel.y)).x; float t=texture(uVelocity,vUv+vec2(0.0,uTexel.y)).x;
+ fragColor=vec4(0.5*(r-l-t+b),0.0,0.0,1.0); }`,
+forces:`uniform sampler2D uVelocity; uniform sampler2D uCurl; uniform sampler2D uHeat; uniform vec2 uTexel; uniform float uCurlStrength; uniform float uBuoyancy; uniform float uDt;
+void main(){
+ float l=abs(texture(uCurl,vUv-vec2(uTexel.x,0.0)).x); float r=abs(texture(uCurl,vUv+vec2(uTexel.x,0.0)).x);
+ float b=abs(texture(uCurl,vUv-vec2(0.0,uTexel.y)).x); float t=abs(texture(uCurl,vUv+vec2(0.0,uTexel.y)).x);
+ float c=texture(uCurl,vUv).x;
+ vec2 force=0.5*vec2(t-b,r-l); force/=length(force)+0.0001; force*=uCurlStrength*c; force.y*=-1.0;
+ vec2 v=texture(uVelocity,vUv).xy+force*uDt; v.y+=texture(uHeat,vUv).r*uBuoyancy*uDt;
+ fragColor=vec4(v,0.0,1.0); }`,
+div:`uniform sampler2D uVelocity; uniform vec2 uTexel;
+void main(){ float l=texture(uVelocity,vUv-vec2(uTexel.x,0.0)).x; float r=texture(uVelocity,vUv+vec2(uTexel.x,0.0)).x;
+ float b=texture(uVelocity,vUv-vec2(0.0,uTexel.y)).y; float t=texture(uVelocity,vUv+vec2(0.0,uTexel.y)).y;
+ fragColor=vec4(0.5*(r-l+t-b),0.0,0.0,1.0); }`,
+pressure:`uniform sampler2D uPressure; uniform sampler2D uDivergence; uniform vec2 uTexel;
+void main(){ float l=texture(uPressure,vUv-vec2(uTexel.x,0.0)).x; float r=texture(uPressure,vUv+vec2(uTexel.x,0.0)).x;
+ float b=texture(uPressure,vUv-vec2(0.0,uTexel.y)).x; float t=texture(uPressure,vUv+vec2(0.0,uTexel.y)).x;
+ fragColor=vec4((l+r+b+t-texture(uDivergence,vUv).x)*0.25,0.0,0.0,1.0); }`,
+grad:`uniform sampler2D uPressure; uniform sampler2D uVelocity; uniform vec2 uTexel;
+void main(){ float l=texture(uPressure,vUv-vec2(uTexel.x,0.0)).x; float r=texture(uPressure,vUv+vec2(uTexel.x,0.0)).x;
+ float b=texture(uPressure,vUv-vec2(0.0,uTexel.y)).x; float t=texture(uPressure,vUv+vec2(0.0,uTexel.y)).x;
+ fragColor=vec4(texture(uVelocity,vUv).xy-0.5*vec2(r-l,t-b),0.0,1.0); }`
+};
+function createFluid(E,{sim,dye,iters}){
+  const P={}; for(const k in FL){P[k]=E.program(FL[k]); if(!P[k]) return null;}
+  const vel=E.pair(sim,sim), heat=E.pair(dye,dye), pres=E.pair(sim,sim), divT=E.target(sim,sim), curlT=E.target(sim,sim);
+  const tx=1/sim; const STEP=1/60;
+  const probe={x:.5,y:.5,dx:0,dy:0,moved:false,live:false};
+  let aspect=1, acc=0;
+  const splat=(pair,x,y,v,rad)=>{const p=E.use(P.splat);E.tex(p,'uTarget',pair.read.tex);E.f(p,'uPoint',x,y);E.f(p,'uValue',...v);E.f(p,'uRadius',rad);E.f(p,'uAspect',aspect);E.draw(pair.write);pair.swap();};
+  const advect=(src,diss,dt)=>{const p=E.use(P.advect);E.tex(p,'uVelocity',vel.read.tex);E.tex(p,'uSource',src.read.tex);E.f(p,'uDt',dt);E.f(p,'uDissipation',diss);E.draw(src.write);src.swap();};
+  function step(dt){
+    advect(vel,0.94,dt);
+    if(probe.moved){
+      splat(vel,probe.x,probe.y,[probe.dx*42,probe.dy*42,0],0.0022);
+      const sp=Math.hypot(probe.dx,probe.dy); const amt=Math.min(0.9,0.12+sp*16);
+      splat(heat,probe.x,probe.y,[amt,amt,amt],0.0022*0.6); probe.moved=false;
+    }
+    let p=E.use(P.curl);E.tex(p,'uVelocity',vel.read.tex);E.f(p,'uTexel',tx,tx);E.draw(curlT);
+    p=E.use(P.forces);E.tex(p,'uVelocity',vel.read.tex);E.tex(p,'uCurl',curlT.tex);E.tex(p,'uHeat',heat.read.tex);E.f(p,'uTexel',tx,tx);E.f(p,'uCurlStrength',9);E.f(p,'uBuoyancy',0.9);E.f(p,'uDt',dt);E.draw(vel.write);vel.swap();
+    p=E.use(P.div);E.tex(p,'uVelocity',vel.read.tex);E.f(p,'uTexel',tx,tx);E.draw(divT);
+    for(let i=0;i<iters;i++){p=E.use(P.pressure);E.tex(p,'uPressure',pres.read.tex);E.tex(p,'uDivergence',divT.tex);E.f(p,'uTexel',tx,tx);E.draw(pres.write);pres.swap();}
+    p=E.use(P.grad);E.tex(p,'uPressure',pres.read.tex);E.tex(p,'uVelocity',vel.read.tex);E.f(p,'uTexel',tx,tx);E.draw(vel.write);vel.swap();
+    advect(heat,0.98,dt);
+  }
+  return {vel,heat,
+    pointer(x,y){ if(x<0||x>1||y<0||y>1){probe.live=false;return;} const sy=1-y;
+      if(!probe.live){probe.x=x;probe.y=sy;probe.live=true;return;}
+      probe.dx+=x-probe.x; probe.dy+=sy-probe.y; probe.x=x; probe.y=sy; probe.moved=true; },
+    update(dt,asp){aspect=asp;acc+=Math.min(Math.max(dt,0),STEP*3);while(acc>=STEP){step(STEP);probe.dx=probe.dy=0;acc-=STEP;}}
+  };
+}
+
+/* ================= HERO: the headline drawn through a fluid ================= */
+const HERO_FS=`
+uniform sampler2D uVelocity; uniform sampler2D uHeat;
+${GLYPH(6)}
+uniform vec2 uResolution; uniform float uText; uniform vec3 uReveal; uniform vec3 uRevealDir; uniform vec2 uLineX[3];
+${NOISE}
+const vec3 PAPER=vec3(0.86,0.91,0.97);
+const vec3 COLD=vec3(0.36,0.74,1.0);
+const vec3 HOT=vec3(0.93,0.69,0.31);
+vec3 burn(float k){ k=clamp(k,0.0,1.0); return k<0.5?mix(vec3(0.45,0.25,0.06),HOT,k*2.0):mix(HOT,vec3(1.0,0.97,0.88),k*2.0-1.0); }
+void main(){
+  vec2 vel=texture(uVelocity,vUv).xy; float heat=texture(uHeat,vUv).r;
+  vec2 p=vec2(vUv.x,1.0-vUv.y)*uResolution;
+  // Refraction: the moving medium bends what is seen through it.
+  vec2 off=vec2(vel.x,-vel.y)*uResolution.y*0.022; float ol=length(off); if(ol>90.0) off*=90.0/ol;
+  vec2 g=glyph(p-off)*uText; float word=glyphWord; float hol=glyphHollow;
+  float cold=glyph(p-off*1.9).x*uText; float warm=glyph(p-off*0.45).x*uText;
+  float present=1.0; float lick=0.0;
+  if(word>=0.0){
+    int li=int(floor(word*0.5+0.01));
+    float rv=li==0?uReveal.x:(li==1?uReveal.y:uReveal.z);
+    float dir=li==0?uRevealDir.x:(li==1?uRevealDir.y:uRevealDir.z);
+    vec2 lx=uLineX[li];
+    float along=clamp((p.x-lx.x)/max(lx.y-lx.x,1.0),0.0,1.0); if(dir<0.0) along=1.0-along;
+    float ragged=along+(snoise(p*0.012)*0.06+snoise(p*0.05)*0.02);
+    float front=rv*1.25-0.12;
+    present=smoothstep(front+0.01,front-0.03,ragged);
+    float flame=(1.0-smoothstep(0.0,0.07,abs(ragged-front)))*step(rv,0.999)*step(0.001,rv);
+    lick=flame*g.y;
+  }
+  g*=present; cold*=present; warm*=present;
+  float k=smoothstep(0.05,0.85,heat);
+  float a=max(g.x,g.y*k);
+  vec3 base=mix(PAPER,HOT,hol*0.85);
+  vec3 col=mix(base,burn(k),k)*a;
+  float fc=max(cold-g.x,0.0), fw=max(warm-g.x,0.0);
+  col+=COLD*fc*0.85+HOT*fw*0.85; a=max(a,max(fc,fw)*0.85);
+  col=col*(1.0-lick)+burn(0.55+0.45*lick)*lick; a=a*(1.0-lick)+lick;
+  a=clamp(a,0.0,1.0);
+  fragColor=vec4(min(col,vec3(a)),a);
+}`;
+function initHero(){
+  const hero=$('#hero'), canvas=$('#heroGL'), read=$('#heroRead');
+  const lines=$$('[data-line]',hero), words=$$('[data-atlas-word]',hero);
+  // Coordinates readout follows the pointer everywhere in the hero.
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();read.textContent='X '+String(Math.round(e.clientX-r.left)).padStart(4,'0')+' · Y '+String(Math.round(e.clientY-r.top)).padStart(4,'0');});
+  if(!MOTION) return;
+
+  // DOM motion (the GL copy follows it): entrance, scroll drift, pointer lean.
+  if(HAS_GSAP){
+    const dir=el=>Number(el.closest('[data-line]').dataset.dir);
+    gsap.set(words,{x:(i,el)=>-dir(el)*5+'vw'});
+    Boot.onDone(()=>gsap.to(words,{x:0,duration:1.8,ease:'expo.out',delay:i=>0.1+Math.floor(i/2)*0.16}));
+    if(HAS_ST){
+      const scrub={trigger:hero,start:'top top',end:'bottom top',scrub:0.9};
+      lines.forEach(l=>gsap.to(l,{xPercent:Number(l.dataset.dir)*17,ease:'none',scrollTrigger:scrub}));
+    }
+    if(!COARSE){
+      const lean=lines.map(l=>({to:gsap.quickTo(l,'x',{duration:1.4,ease:'power3.out'}),dir:Number(l.dataset.dir)}));
+      hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();const nx=(e.clientX-r.left)/r.width-.5;lean.forEach(l=>l.to(nx*36*l.dir));});
+    }
+  }
+
+  let settle; Boot.task(new Promise(r=>settle=r)); setTimeout(()=>settle(),6000);
+  const E=makeGL(canvas,{dprCap:COARSE?1.25:1.5});
+  if(!E||!E.float){settle();return;}
+  const fluid=createFluid(E,COARSE?{sim:96,dye:384,iters:12}:{sim:160,dye:640,iters:20});
+  const disp=E.program(HERO_FS);
+  if(!fluid||!disp){settle();return;}
+  const wl=atlasWords($('#hero-title'));
+  const W=new Float32Array(6*4), A=new Float32Array(6*3), LX=new Float32Array(6);
+  const st={text:0,reveal:[0,0,0]};
+  let atlas=null, atlasTex=null;
+  const pr=()=>canvas.width/Math.max(canvas.clientWidth,1);
+  const rasterise=()=>{atlas=buildAtlas(wl,pr());if(atlasTex)E.gl.deleteTexture(atlasTex);atlasTex=E.imageTex(atlas.fill);};
+  let rt; E.onResize=()=>{clearTimeout(rt);rt=setTimeout(()=>{if(atlas)rasterise();},120);};
+  new ResizeObserver(()=>E.onResize()).observe(hero);
+
+  fontsReady.then(()=>{
+    rasterise(); hero.setAttribute('data-gl-type',''); st.text=1;
+    if(Boot.finished) st.reveal=[1,1,1];
+    requestAnimationFrame(()=>requestAnimationFrame(()=>settle()));
+  });
+
+  Boot.onDone(()=>{
+    st.reveal.forEach((_,i)=>tween(st.reveal,i,1,1.6,0.1+i*0.16));
+    const toCanvas=(x,y)=>{const r=canvas.getBoundingClientRect();fluid.pointer((x-r.left)/r.width,(y-r.top)/r.height);};
+    if(COARSE){ Ticker.add((dt,t)=>{ if(E.visible) fluid.pointer(0.5+0.34*Math.sin(t*0.45),0.55+0.18*Math.sin(t*0.7+1.3)); }); }
+    else window.addEventListener('pointermove',e=>toCanvas(e.clientX,e.clientY),{passive:true});
+  });
+
+  Ticker.add(dt=>{
+    if(!E.visible||!atlas) return;
+    const cr=canvas.getBoundingClientRect(); placeWords(wl,atlas,cr,pr(),W,A);
+    for(let l=0;l<3;l++){const a=2*l,b=2*l+1;LX[l*2]=Math.min(W[a*4],W[b*4]);LX[l*2+1]=Math.max(W[a*4]+W[a*4+2],W[b*4]+W[b*4+2]);}
+    fluid.update(dt,canvas.width/Math.max(canvas.height,1));
+    const p=E.use(disp);
+    E.tex(p,'uVelocity',fluid.vel.read.tex); E.tex(p,'uHeat',fluid.heat.read.tex); E.tex(p,'uFill',atlasTex);
+    E.f(p,'uAtlasSize',atlas.fill.width,atlas.fill.height); E.fv(p,'uWords',4,W); E.fv(p,'uAtlas',3,A); E.fv(p,'uLineX',2,LX);
+    E.f(p,'uResolution',canvas.width,canvas.height); E.f(p,'uText',st.text);
+    E.f(p,'uReveal',st.reveal[0],st.reveal[1],st.reveal[2]); E.f(p,'uRevealDir',1,-1,1);
+    E.draw(null);
+  });
+}
+
+/* ================= POINTER LIQUID-FILM TRAIL ================= */
+function initFilm(){
+  if(!MOTION||COARSE) return;
+  const canvas=$('#filmGL'); const E=makeGL(canvas,{dprCap:1.5}); if(!E||!E.float) return;
+  const SIM=192, FILM=768, STEP=1/60, SETTLE=1.8;
+  const nb=`uniform sampler2D uSource; uniform vec2 uTexel;
+vec4 L(){return texture(uSource,vUv-vec2(uTexel.x,0.0));} vec4 R(){return texture(uSource,vUv+vec2(uTexel.x,0.0));}
+vec4 B(){return texture(uSource,vUv-vec2(0.0,uTexel.y));} vec4 T(){return texture(uSource,vUv+vec2(0.0,uTexel.y));}`;
+  const P={
+    advect:E.program(`uniform sampler2D uSource; uniform sampler2D uVelocity; uniform float uDecay; uniform float uDt;
+void main(){ vec2 v=texture(uVelocity,vUv).xy; fragColor=texture(uSource,clamp(vUv-v*uDt,0.001,0.999))*uDecay; }`),
+    splat:E.program(`uniform sampler2D uSource; uniform vec2 uPoint; uniform vec2 uDelta; uniform float uAspect; uniform float uFilm; uniform float uAmount;
+void main(){ vec2 p=vUv-uPoint; p.x*=uAspect; float g=exp(-dot(p,p)/0.00065); vec4 base=texture(uSource,vUv);
+ if(uFilm>0.5) base.r=min(base.r+g*uAmount,1.2); else base.xy+=uDelta*g*30.0; fragColor=base; }`),
+    div:E.program(nb+`void main(){ fragColor=vec4((R().x-L().x+T().y-B().y)*0.5,0.0,0.0,1.0); }`),
+    solve:E.program(nb+`uniform sampler2D uDiv; void main(){ fragColor=vec4((L().x+R().x+B().x+T().x-texture(uDiv,vUv).x)*0.25,0.0,0.0,1.0); }`),
+    project:E.program(nb+`uniform sampler2D uVelocity; void main(){ vec2 v=texture(uVelocity,vUv).xy-0.5*vec2(R().x-L().x,T().x-B().x); fragColor=vec4(v,0.0,1.0); }`),
+    display:E.program(`uniform sampler2D uFilm; uniform vec2 uTexel;
+float hAt(vec2 p){return texture(uFilm,p).r;}
+void main(){
+  float h=hAt(vUv); float wet=smoothstep(0.025,0.10,h);
+  if(wet<0.001){fragColor=vec4(0.0);return;}
+  vec2 slope=vec2(hAt(vUv+vec2(uTexel.x,0.0))-hAt(vUv-vec2(uTexel.x,0.0)),hAt(vUv+vec2(0.0,uTexel.y))-hAt(vUv-vec2(0.0,uTexel.y)));
+  vec3 n=normalize(vec3(-slope*60.0,1.0)); float bend=1.0-n.z;
+  float light=dot(n,normalize(vec3(-0.4,0.6,1.0))); float spec=pow(max(light,0.0),14.0);
+  float band=n.x*0.7+n.y*0.5;
+  vec3 tint=mix(vec3(0.42,0.62,0.86),vec3(0.86,0.92,0.98),smoothstep(-0.3,0.65,band));
+  float crest=pow(max(0.0,1.0-abs(light-0.78)*8.0),3.0);
+  tint=mix(tint,vec3(0.95,0.72,0.36),clamp(crest*0.5+spec*0.25,0.0,0.6));
+  float a=clamp(0.015+bend*0.28+crest*0.36+spec*0.10,0.0,0.46)*wet;
+  fragColor=vec4(tint*a,a);
+}`)};
+  for(const k in P) if(!P[k]) return;
+  const vel=E.pair(SIM,SIM), film=E.pair(FILM,FILM), pres=E.pair(SIM,SIM), divT=E.target(SIM,SIM);
+  const all=[...vel.all(),...film.all(),...pres.all(),divT];
+  const clearAll=()=>all.forEach(t=>E.clear(t));
+  const probe={x:0,y:0,active:false}; let lastX=-1,lastY=-1,acc=0,idle=SETTLE+1;
+  addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;probe.x=e.clientX;probe.y=e.clientY;probe.active=true;},{passive:true});
+  document.addEventListener('pointerout',e=>{if(!e.relatedTarget)probe.active=false;});
+  const st=(p,n)=>E.f(p,'uTexel',1/n,1/n);
+  Ticker.add(dt=>{
+    if(!Boot.finished) return;
+    const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return;
+    if(!probe.active){ if(idle<SETTLE) clearAll(); idle=SETTLE+1; lastX=lastY=-1; }
+    else{
+      const x=probe.x/w, y=1-probe.y/h;
+      if(lastX>=0){
+        const dx=x-lastX, dy=y-lastY, dist=Math.hypot(dx*w,dy*h);
+        if(dist>0.5){
+          idle=0; const steps=Math.min(12,Math.max(1,Math.ceil(dist/18)));
+          const amount=Math.min(0.26,dist*0.017)/steps;
+          const cx=Math.max(-0.08,Math.min(0.08,dx))/steps, cy=Math.max(-0.08,Math.min(0.08,dy))/steps;
+          for(let i=1;i<=steps;i++){
+            const px=lastX+dx*i/steps, py=lastY+dy*i/steps;
+            let p=E.use(P.splat);E.tex(p,'uSource',vel.read.tex);E.f(p,'uPoint',px,py);E.f(p,'uDelta',cx,cy);E.f(p,'uAspect',w/h);E.f(p,'uFilm',0);E.f(p,'uAmount',amount);E.draw(vel.write);vel.swap();
+            p=E.use(P.splat);E.tex(p,'uSource',film.read.tex);E.f(p,'uPoint',px,py);E.f(p,'uDelta',cx,cy);E.f(p,'uAspect',w/h);E.f(p,'uFilm',1);E.f(p,'uAmount',amount);E.draw(film.write);film.swap();
+          }
+        }
+      }
+      lastX=x; lastY=y; idle+=dt;
+      if(idle<SETTLE){
+        acc+=Math.min(dt,0.05);
+        while(acc>=STEP){
+          let p=E.use(P.advect);E.tex(p,'uVelocity',vel.read.tex);E.tex(p,'uSource',vel.read.tex);E.f(p,'uDecay',0.95);E.f(p,'uDt',1.45/60);E.draw(vel.write);vel.swap();
+          p=E.use(P.div);E.tex(p,'uSource',vel.read.tex);st(p,SIM);E.draw(divT);
+          for(let i=0;i<12;i++){p=E.use(P.solve);E.tex(p,'uSource',pres.read.tex);E.tex(p,'uDiv',divT.tex);st(p,SIM);E.draw(pres.write);pres.swap();}
+          p=E.use(P.project);E.tex(p,'uSource',pres.read.tex);E.tex(p,'uVelocity',vel.read.tex);st(p,SIM);E.draw(vel.write);vel.swap();
+          p=E.use(P.advect);E.tex(p,'uVelocity',vel.read.tex);E.tex(p,'uSource',film.read.tex);E.f(p,'uDecay',0.9);E.f(p,'uDt',1.45/60);E.draw(film.write);film.swap();
+          acc-=STEP;
+        }
+      }
+    }
+    const gl=E.gl; gl.bindFramebuffer(gl.FRAMEBUFFER,null); gl.viewport(0,0,canvas.width,canvas.height); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+    if(idle<SETTLE){const p=E.use(P.display);E.tex(p,'uFilm',film.read.tex);st(p,FILM);E.draw(null);}
+  });
+}
+
+/* ================= PILLARS: each foundation as a live figure ================= */
+const PILLAR_FS=`
+uniform float uTime; uniform vec2 uResolution; uniform vec2 uMouse;
+uniform vec4 uRects[3]; uniform float uShow[3]; uniform float uGrow[3]; uniform vec2 uOrigin[3];
+${NOISE}
+const vec3 INK=vec3(0.08,0.13,0.18);
+const vec3 BRASS=vec3(0.62,0.42,0.08);
+const vec3 BLUE=vec3(0.07,0.27,0.50);
+float contour(float v,float s,float gradPx,float width){ float d=abs(fract(v/s-0.5)-0.5)*s/max(gradPx,1e-6); return 1.0-smoothstep(width*0.5,width*0.5+1.0,d); }
+void main(){
+  vec2 frag=vec2(vUv.x,1.0-vUv.y);
+  int row=-1; vec4 r=vec4(0.0); float show=0.0; float grow=0.0; vec2 org=vec2(0.0);
+  for(int i=0;i<3;i++){ vec4 b=uRects[i]; if(frag.x>=b.x&&frag.x<=b.z&&frag.y>=b.y&&frag.y<=b.w){row=i;r=b;show=uShow[i];grow=uGrow[i];org=uOrigin[i];} }
+  if(row<0){fragColor=vec4(0.0);return;}
+  float bh=max((r.w-r.y)*uResolution.y,1.0);
+  float W=(r.z-r.x)*uResolution.x/bh;
+  vec2 q=vec2((frag.x-r.x)*uResolution.x/bh,(frag.y-r.y)*uResolution.y/bh);
+  float px=1.0/bh; float t=uTime;
+  vec2 m=vec2((uMouse.x-r.x)*uResolution.x/bh,(uMouse.y-r.y)*uResolution.y/bh);
+  float near=exp(-dot(q-m,q-m)*0.9);
+  vec3 col=INK; float a=0.0;
+  if(row==0){
+    // Rising contours: isolines climb; the pointer is a source they bulge around.
+    vec2 p=vec2(q.x*0.8,q.y*1.2+t*0.35);
+    float h=fbm3(p)*0.9+(1.0-q.y)*0.55+exp(-dot(q-m,q-m)*1.6)*0.9*show;
+    float gg=length(vec2(dFdx(h),dFdy(h)));
+    float lines=1.0-smoothstep(0.6,1.6,abs(fract(h*6.0-0.5)-0.5)/max(gg*6.0,1e-5));
+    col=mix(BLUE,BRASS,smoothstep(0.35,1.05,h)); a=lines*0.8;
+  } else if(row==1){
+    // Idea to market: a dipole's field lines; the idea pole follows the hand.
+    vec2 rest0=vec2(W*0.28,0.5+0.06*sin(t*0.4)); vec2 c1=vec2(W*0.74,0.5-0.06*sin(t*0.4));
+    vec2 c0=mix(rest0,m,clamp(near*3.0*show,0.0,0.85));
+    vec2 d0=q-c0, d1=q-c1; float r0=max(dot(d0,d0),1e-4), r1=max(dot(d1,d1),1e-4);
+    float psi=atan(d0.y,d0.x)-atan(d1.y,d1.x);
+    vec2 e=d0/r0-d1/r1;
+    float fade=smoothstep(0.02,0.09,min(sqrt(r0),sqrt(r1)));
+    float field=contour(psi,0.3141593,length(e)*px,1.2)*fade*mix(0.3,1.0,smoothstep(0.4,3.0,length(e)));
+    float poles=smoothstep(0.05,0.03,sqrt(r0))+smoothstep(0.05,0.03,sqrt(r1));
+    col=mix(BLUE,BRASS,smoothstep(0.0,W,q.x)); a=max(field*0.85,poles);
+  } else {
+    // Community network: a lattice lit by rings radiating from the hand.
+    const float N=7.0; vec2 lp=q*N; vec2 cell=vec2(lp.x-0.5*floor(lp.y),lp.y);
+    float node=smoothstep(0.17,0.06,length(fract(cell)-0.5));
+    float rr=length(q-m);
+    float ring=pow(0.5+0.5*cos(rr*40.0-t*2.6),8.0)*smoothstep(2.2,0.1,rr)*show;
+    float idle=pow(0.5+0.5*sin(q.x*3.0-t*1.2+q.y*2.0),6.0)*0.4;
+    float lit=node*(0.3+0.95*max(ring,idle));
+    col=mix(INK,BRASS,ring); a=lit;
+  }
+  // Grows out from where the hand came in.
+  vec2 o=vec2(org.x*W,org.y);
+  float reach=grow*(W*1.2+1.0);
+  float grown=1.0-smoothstep(reach-0.6,reach,length(q-o));
+  float edge=smoothstep(0.0,3.0*px,q.x)*smoothstep(0.0,3.0*px,W-q.x)*smoothstep(0.0,3.0*px,q.y)*smoothstep(0.0,3.0*px,1.0-q.y);
+  a=clamp(a,0.0,1.0)*(0.28+0.72*show*grown)*edge;
+  fragColor=vec4(col*a,a);
+}`;
+function initPillars(){
+  const grid=$('#pillarGrid'), canvas=$('#pillarGL');
+  const E=makeGL(canvas,{dprCap:1.5}); if(!E) return;
+  const prog=E.program(PILLAR_FS); if(!prog) return;
+  grid.setAttribute('data-gl','');
+  const pillars=$$('.pillar',grid), plates=$$('[data-plate]',grid);
+  const S=pillars.map(()=>({show:0,target:0,grow:1,origin:[.5,.5]}));
+  const mouse=[.5,.5], mt=[.5,.5];
+  const R=new Float32Array(12), SH=new Float32Array(3), GR=new Float32Array(3), OR=new Float32Array(6);
+  const toLocal=(e,i)=>{const r=plates[i].getBoundingClientRect();return [Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))];};
+  pillars.forEach((p,i)=>{
+    p.addEventListener('pointerenter',e=>{S[i].target=1; if(S[i].show<0.3){S[i].grow=0;S[i].origin=toLocal(e,i);}});
+    p.addEventListener('pointerleave',()=>{S[i].target=0;});
+  });
+  grid.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();mt[0]=(e.clientX-r.left)/r.width;mt[1]=(e.clientY-r.top)/r.height;});
+  if(COARSE&&MOTION){ // touch: the plate nearest the middle of the screen lights, with a slow probe of its own
+    const io=new IntersectionObserver(es=>es.forEach(en=>{const i=pillars.indexOf(en.target);if(en.isIntersecting){S[i].target=1;if(S[i].show<.3){S[i].grow=0;S[i].origin=[.5,.5];}}else S[i].target=0;}),{rootMargin:'-35% 0px -35% 0px'});
+    pillars.forEach(p=>io.observe(p));
+  }
+  let time=0;
+  const frame=(dt)=>{
+    time+=dt; const cr=canvas.getBoundingClientRect();
+    if(COARSE){ const act=S.findIndex(s=>s.target>0); if(act>=0){const r=plates[act].getBoundingClientRect();mt[0]=(r.left-cr.left+r.width*(0.5+0.35*Math.sin(time*0.6)))/cr.width;mt[1]=(r.top-cr.top+r.height*(0.5+0.3*Math.sin(time*0.9+1)))/cr.height;} }
+    const k=1-Math.pow(0.001,dt); mouse[0]+=(mt[0]-mouse[0])*k; mouse[1]+=(mt[1]-mouse[1])*k;
+    S.forEach((s,i)=>{
+      s.show+=(s.target-s.show)*(1-Math.pow(0.02,dt)); s.grow=Math.min(1,s.grow+dt*0.85);
+      const r=plates[i].getBoundingClientRect();
+      R.set([(r.left-cr.left)/cr.width,(r.top-cr.top)/cr.height,(r.right-cr.left)/cr.width,(r.bottom-cr.top)/cr.height],i*4);
+      SH[i]=s.show; GR[i]=s.grow; OR[i*2]=s.origin[0]; OR[i*2+1]=s.origin[1];
+    });
+    const p=E.use(prog);
+    E.f(p,'uTime',time); E.f(p,'uResolution',canvas.width,canvas.height); E.f(p,'uMouse',mouse[0],mouse[1]);
+    E.fv(p,'uRects',4,R); E.fv(p,'uShow',1,SH); E.fv(p,'uGrow',1,GR); E.fv(p,'uOrigin',2,OR);
+    E.draw(null);
+  };
+  if(MOTION) Ticker.add(dt=>{if(E.visible)frame(dt);});
+  else { S.forEach(s=>{s.target=s.show=1;}); frame(0); E.onResize=()=>frame(0); }
+}
+
+/* ================= FIG. 06: interference plate ================= */
+const PLATE_FS=`
+uniform float uTime; uniform vec2 uResolution; uniform vec2 uA; uniform vec2 uB; uniform float uWave;
+${NOISE}
+float ringAt(vec2 p,vec2 c,float rad){ float d=length(p-c); return 1.0-smoothstep(0.0,1.5,abs(d-rad)/max(fwidth(d),1e-5)); }
+void main(){
+  float aspect=uResolution.x/uResolution.y;
+  vec2 p=(vUv-0.5)*vec2(aspect,1.0);
+  float t=uTime*2.4; float k=mix(30.0,56.0,uWave);
+  vec2 a=(uA-0.5)*vec2(aspect,1.0), b=(uB-0.5)*vec2(aspect,1.0);
+  float r1=length(p-a), r2=length(p-b);
+  float a1=1.0/(1.0+r1*2.2), a2=1.0/(1.0+r2*2.2);
+  float h=a1*sin(r1*k-t)+a2*sin(r2*k-t);
+  float amp=sqrt(max(a1*a1+a2*a2+2.0*a1*a2*cos(k*(r1-r2)),0.0));
+  float lit=smoothstep(0.08,0.85,amp/(a1+a2));
+  float g=max(fwidth(h),1e-5);
+  float crest=1.0-smoothstep(0.0,1.4,abs(h-0.6*amp)/g);
+  float trough=1.0-smoothstep(0.0,1.4,abs(h+0.6*amp)/g);
+  vec3 col=vec3(0.039,0.118,0.216);
+  col+=vec3(0.36,0.74,1.0)*max(h,0.0)*lit*0.22;
+  col+=vec3(0.86,0.91,0.97)*crest*lit*0.85;
+  col+=vec3(0.36,0.74,1.0)*trough*lit*0.5;
+  vec3 BR=vec3(0.93,0.69,0.31);
+  col+=BR*smoothstep(0.024,0.0,r1)+BR*smoothstep(0.024,0.0,r2);
+  col+=BR*(ringAt(p,a,0.045)+ringAt(p,b,0.045))*0.6;
+  vec2 v=vUv-0.5; col*=1.0-0.9*dot(v,v);
+  col+=(hash12(vUv*uResolution+fract(uTime)*41.0)-0.5)*0.03;
+  fragColor=vec4(col,1.0);
+}`;
+function initPlate(){
+  const box=$('#plateBox'), canvas=$('#plateGL'), read=$('#plateRead');
+  const E=makeGL(canvas,{dprCap:1.5,scale:0.8}); if(!E) return;
+  const prog=E.program(PLATE_FS); if(!prog) return;
+  const rest={A:[.36,.5],B:[.64,.5]}; const A=[...rest.A], B=[...rest.B];
+  let ptr=null, wave=0.3, time=0;
+  box.addEventListener('pointermove',e=>{const r=box.getBoundingClientRect();ptr=[(e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height];});
+  box.addEventListener('pointerleave',()=>{ptr=null;read.textContent='— %';});
+  const ratioAt=(x,y)=>{ // reinforcement at the pointer, from the same field the shader draws
+    const asp=canvas.width/Math.max(canvas.height,1), k=30+26*wave;
+    const P=[(x-.5)*asp,y-.5], a=[(A[0]-.5)*asp,A[1]-.5], b=[(B[0]-.5)*asp,B[1]-.5];
+    const r1=Math.hypot(P[0]-a[0],P[1]-a[1]), r2=Math.hypot(P[0]-b[0],P[1]-b[1]);
+    const a1=1/(1+r1*2.2), a2=1/(1+r2*2.2);
+    return Math.sqrt(Math.max(a1*a1+a2*a2+2*a1*a2*Math.cos(k*(r1-r2)),0))/(a1+a2);
+  };
+  const frame=dt=>{
+    time+=dt;
+    const r=box.getBoundingClientRect(), vh=innerHeight; wave=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height)));
+    const k=1-Math.pow(0.02,dt);
+    let tA=rest.A, tB=rest.B;
+    if(ptr){ const dA=Math.hypot(ptr[0]-A[0],ptr[1]-A[1]), dB=Math.hypot(ptr[0]-B[0],ptr[1]-B[1]); if(dA<dB) tA=[Math.min(.48,ptr[0]),ptr[1]]; else tB=[Math.max(.52,ptr[0]),ptr[1]]; }
+    A[0]+=(tA[0]-A[0])*k; A[1]+=(tA[1]-A[1])*k; B[0]+=(tB[0]-B[0])*k; B[1]+=(tB[1]-B[1])*k;
+    if(ptr) read.textContent=String(Math.round(ratioAt(ptr[0],ptr[1])*100)).padStart(2,'0')+' %';
+    const p=E.use(prog);
+    E.f(p,'uTime',time); E.f(p,'uResolution',canvas.width,canvas.height); E.f(p,'uA',A[0],A[1]); E.f(p,'uB',B[0],B[1]); E.f(p,'uWave',wave);
+    E.draw(null);
+  };
+  if(MOTION) Ticker.add(dt=>{if(E.visible)frame(dt);});
+  else { frame(0.5); E.onResize=()=>frame(0); }
+}
+
+/* ================= FOOTER: the wordmark as a signal ================= */
+const FOOT_FS=`
+uniform float uTime; uniform vec2 uResolution; uniform vec2 uMouse; uniform float uEnergy; uniform float uText;
+${GLYPH(2)}
+const vec3 PAPER=vec3(0.86,0.91,0.97); const vec3 COLD=vec3(0.36,0.74,1.0); const vec3 HOT=vec3(0.93,0.69,0.31);
+void main(){
+  vec2 p=vec2(vUv.x,1.0-vUv.y)*uResolution; float x=vUv.x; float t=uTime;
+  float packetX=fract(t*0.16)*1.6-0.3;
+  float packet=exp(-pow((x-packetX)*7.0,2.0))*0.55;
+  float hand=exp(-pow((x-uMouse.x)*4.0,2.0))*uEnergy;
+  float env=0.04+packet+hand;
+  float phase=x*34.0-t*7.0; float amp=uResolution.y*0.07*env;
+  float dy=amp*sin(phase); float slope=amp*cos(phase);
+  vec2 g=glyph(p-vec2(0.0,dy))*uText; float hol=glyphHollow;
+  float cold=glyph(p-vec2(0.0,dy+slope*0.35)).x*uText;
+  float warm=glyph(p-vec2(0.0,dy-slope*0.35)).x*uText;
+  float a=g.x; vec3 col=mix(PAPER*0.72,HOT,hol*0.9)*a;
+  float fc=max(cold-g.x,0.0), fw=max(warm-g.x,0.0);
+  col+=COLD*fc*0.85+HOT*fw*0.85; a=max(a,max(fc,fw)*0.85);
+  float traceY=uResolution.y*0.5+dy*1.6;
+  float trace=(1.0-smoothstep(0.6,2.0,abs(p.y-traceY)))*smoothstep(0.03,0.25,env)*(1.0-a);
+  col+=HOT*trace*0.8; a+=trace*0.8;
+  a=clamp(a,0.0,1.0);
+  fragColor=vec4(min(col,vec3(a)),a);
+}`;
+function initFooter(){
+  if(!MOTION) return;
+  const wrap=$('#footWord'), canvas=$('#footGL');
+  const E=makeGL(canvas,{dprCap:1.5}); if(!E) return;
+  const prog=E.program(FOOT_FS); if(!prog) return;
+  const wl=atlasWords(wrap); const W=new Float32Array(8), A=new Float32Array(6);
+  let atlas=null, tex=null, energy=0, mx=.5, time=0, lastX=null;
+  const pr=()=>canvas.width/Math.max(canvas.clientWidth,1);
+  const rasterise=()=>{atlas=buildAtlas(wl,pr());if(tex)E.gl.deleteTexture(tex);tex=E.imageTex(atlas.fill);};
+  let rt; E.onResize=()=>{clearTimeout(rt);rt=setTimeout(()=>{if(atlas)rasterise();},120);};
+  fontsReady.then(()=>{rasterise();wrap.setAttribute('data-gl-type','');});
+  $('#footer').addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();const x=(e.clientX-r.left)/r.width;if(lastX!=null)energy=Math.min(1,energy+Math.abs(x-lastX)*6);lastX=x;mx=x;});
+  Ticker.add(dt=>{
+    if(!E.visible||!atlas) return;
+    time+=dt; energy*=Math.pow(0.25,dt);
+    placeWords(wl,atlas,canvas.getBoundingClientRect(),pr(),W,A);
+    const p=E.use(prog);
+    E.tex(p,'uFill',tex); E.f(p,'uAtlasSize',atlas.fill.width,atlas.fill.height); E.fv(p,'uWords',4,W); E.fv(p,'uAtlas',3,A);
+    E.f(p,'uTime',time); E.f(p,'uResolution',canvas.width,canvas.height); E.f(p,'uMouse',mx,.5); E.f(p,'uEnergy',energy); E.f(p,'uText',1);
+    E.draw(null);
+  });
+}
+
+/* ================= FIG. 01: the elevation rises with the scroll ================= */
+function initElevation(){
+  const fig=$('#elev'), groups=$$('[data-stage]',fig), items=$$('#stages li'), read=$('#stageRead'), fill=$('[data-fill]',fig);
+  if(!(HAS_ST&&MOTION)){ items.forEach(li=>li.classList.add('on')); read.textContent='04'; return; }
+  root.classList.add('has-st');
+  const paths=groups.map(g=>$$('[pathLength]',g)); paths.flat().forEach(p=>{p.style.strokeDasharray='1';p.style.strokeDashoffset='1';});
+  fill.style.opacity=0;
+  const apply=prog=>{
+    const s=prog*4;
+    paths.forEach((ps,i)=>{const k=Math.min(1,Math.max(0,s-i));ps.forEach((p,j)=>{const kk=Math.min(1,Math.max(0,k*ps.length-j*0.6));p.style.strokeDashoffset=String(1-kk);});});
+    fill.style.opacity=String(Math.min(1,Math.max(0,(s-3.4)/0.6)));
+    const idx=Math.min(3,Math.floor(s));
+    items.forEach((li,i)=>{li.classList.toggle('on',i===idx);li.classList.toggle('done',i<idx);});
+    read.textContent=String(idx+1).padStart(2,'0');
+  };
+  apply(0);
+  ScrollTrigger.create({trigger:fig,start:'top 80%',end:'bottom 35%',scrub:0.6,onUpdate:self=>apply(self.progress)});
+}
+
+/* ================= REVEALS ================= */
+function armReveals(){
+  if(!MOTION||!('IntersectionObserver' in window)) return;
+  root.classList.add('armed');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.setAttribute('data-shown','');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px'});
+  $$('[data-reveal]').forEach(el=>io.observe(el));
+}
+
+/* ================= LOADER ================= */
+function runLoader(){
+  const loader=$('#loader');
+  if(!MOTION){loader.hidden=true;Boot.finish();return;}
+  history.scrollRestoration='manual'; scrollTo(0,0);
+  root.style.overflow='hidden'; lenis&&lenis.stop();
+  Boot.task(fontsReady);
+  Boot.task(new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r,{once:true})));
+  const pcts=$$('[data-pct]',loader), stats=$$('[data-status]',loader);
+  const STATUS=['Setting type','Compiling shaders','Laying foundations','Squaring the grid'];
+  const t0=performance.now(); let shown=0, lastCount=-1, since=t0, leaving=false;
+  const write=p=>{loader.style.setProperty('--progress',p.toFixed(4));const txt=String(Math.round(p*100)).padStart(3,'0');pcts.forEach(el=>el.textContent=txt);const s=STATUS[Math.min(3,Math.floor(p*4))];stats.forEach(el=>{if(el.textContent!==s)el.textContent=s;});};
+  const leave=()=>{
+    leaving=true; Ticker.remove(tick);
+    const from=shown; let k=0; const fin=dt=>{k=Math.min(1,k+dt/0.35);write(from+(1-from)*ease.out(k));if(k>=1){Ticker.remove(fin);
+      setTimeout(()=>{loader.classList.add('leave');setTimeout(()=>Boot.finish(),400);setTimeout(()=>{loader.hidden=true;root.style.overflow='';lenis&&lenis.start();HAS_ST&&ScrollTrigger.refresh();},1450);},150);}};
+    Ticker.add(fin);
+  };
+  function tick(dt){
+    if(leaving) return;
+    const now=performance.now(), t=(now-t0)/1000;
+    if(Boot.total!==lastCount){lastCount=Boot.total;since=now;}
+    const real=Boot.total?Boot.settled/Boot.total:0, creep=0.9*(1-Math.exp(-t/2.2));
+    shown+=(Math.min(0.97,Math.max(real*0.97,creep))-shown)*0.08; write(shown);
+    const allIn=Boot.total>0&&Boot.settled===Boot.total&&(now-since)/1000>0.35;
+    if((allIn&&t>1.1)||t>7) leave();
+  }
+  Ticker.add(tick);
+  // Failsafe: whatever happens to the frame loop, the page is shown.
+  setTimeout(()=>{ if(Boot.finished) return; loader.classList.add('leave'); Boot.finish(); setTimeout(()=>{loader.hidden=true;root.style.overflow='';lenis&&lenis.start();},1400); },8500);
+}
+
+/* ================= PAGE UI ================= */
+function initUI(){
+  const nav=$('#nav'), mb=$('#menuBtn');
+  mb.addEventListener('click',()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'CLOSE':'MENU';});
+  $$('.nav-links a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');mb.setAttribute('aria-expanded',false);mb.textContent='MENU';}));
+  const tag=$('#sheetTag'), links=$$('.nav-links a');
+  const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){tag.textContent='SHEET '+e.target.dataset.sheet;links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));}}),{rootMargin:'-45% 0px -50% 0px'});
+  $$('[data-sheet]').forEach(s=>sio.observe(s));
+  $$('.sch-btn').forEach(b=>b.addEventListener('click',()=>{b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true');setTimeout(()=>HAS_ST&&ScrollTrigger.refresh(),600);}));
+
+  // ecosystem orbit
+  const names=['CORP','FC2C','BWA','PITCH','PODCAST','BLOG','PARTNERS'], NS='http://www.w3.org/2000/svg', spin=$('#orbitSpin'), nodes=[], spokes=[];
+  names.forEach((n,i)=>{const a=(i/names.length)*Math.PI*2-Math.PI/2,x=250+190*Math.cos(a),y=250+190*Math.sin(a);
+    const sp=document.createElementNS(NS,'line');sp.setAttribute('x1',250+54*Math.cos(a));sp.setAttribute('y1',250+54*Math.sin(a));sp.setAttribute('x2',x);sp.setAttribute('y2',y);sp.setAttribute('class','spoke');spin.appendChild(sp);spokes.push(sp);
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','node');const tg=document.createElementNS(NS,'g');tg.setAttribute('class','counter');
+    const c=document.createElementNS(NS,'circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',30);
+    const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y+4);t.textContent=n;
+    tg.append(c,t);g.appendChild(tg);spin.appendChild(g);nodes.push(g);});
+  const lis=$$('#brands li'); let auto=0, timer=null;
+  const setOn=i=>{nodes.forEach((n,k)=>n.classList.toggle('on',k===i));spokes.forEach((s,k)=>s.classList.toggle('on',k===i));lis.forEach((l,k)=>l.classList.toggle('on',k===i));};
+  const cycle=()=>{setOn(auto);auto=(auto+1)%names.length;};
+  const start=()=>{if(MOTION&&!timer)timer=setInterval(cycle,2200);};
+  cycle(); start();
+  lis.forEach((l,i)=>{l.addEventListener('mouseenter',()=>{clearInterval(timer);timer=null;setOn(i);auto=i;});l.addEventListener('mouseleave',start);});
+
+  // copy buttons
+  $$('.copy').forEach(b=>b.addEventListener('click',()=>{
+    const done=t=>{b.textContent=t;setTimeout(()=>b.textContent='Copy',1600);};
+    const sel=()=>{const el=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected');};
+    if(navigator.clipboard)navigator.clipboard.writeText(b.dataset.copy).then(()=>done('Copied')).catch(sel);else sel();
+  }));
+
+  // inquiry form
+  const form=$('#inq'), msg=$('#formMsg');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const fName=$('#f-name'), fEmail=$('#f-email');
+    const name=fName.value.trim(), email=fEmail.value.trim();
+    if(!name||!/^\S+@\S+\.\S+$/.test(email)){msg.hidden=false;msg.textContent='Add your name and a valid email address so we can reply.';(name?fEmail:fName).focus();return;}
+    const progs=$$('.chips input:checked',form).map(c=>c.value).join(', ')||'Not specified';
+    const body=`Inquiry: ${$('#f-type').value}\nName: ${name}\nOrganization: ${$('#f-org').value||'—'}\nEmail: ${email}\nPrograms: ${progs}\n\n${$('#f-msg').value}`;
+    const ok=()=>{msg.hidden=false;msg.textContent='Your inquiry is copied. Paste it into an email to blueprint@theblueprintempire.co to reach our team.';};
+    if(navigator.clipboard)navigator.clipboard.writeText(body).then(ok).catch(()=>{msg.hidden=false;msg.textContent='Email your inquiry to blueprint@theblueprintempire.co to reach our team.';});else ok();
+  });
+}
+
+/* ================= START ================= */
+const safe=(f,n)=>{try{f()}catch(e){console.error('['+n+']',e)}};
+safe(initUI,'ui');
+safe(initHero,'hero');
+safe(initFilm,'film');
+safe(initPillars,'pillars');
+safe(initPlate,'plate');
+safe(initFooter,'footer');
+safe(initElevation,'elevation');
+Boot.onDone(armReveals);
+safe(runLoader,'loader');
+})();
+</script>
+
+</body></html>
