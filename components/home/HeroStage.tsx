@@ -35,7 +35,7 @@ export default function HeroStage({ id, sheet, children }: { id: string; sheet: 
     const words = [...hero.querySelectorAll<HTMLElement>("[data-atlas-word]")];
     const dirOf = (el: Element) => Number(el.closest<HTMLElement>("[data-line]")?.dataset.dir ?? 1);
 
-    const fade = hero.querySelector<HTMLElement>("[data-hero-fade]");
+    const fade = [...hero.querySelectorAll<HTMLElement>("[data-hero-fade]")];
     const statement = [...hero.querySelectorAll<HTMLElement>("[data-hs-word]")];
     const nav = document.getElementById("nav");
 

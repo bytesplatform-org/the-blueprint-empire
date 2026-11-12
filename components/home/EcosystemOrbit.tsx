@@ -14,7 +14,7 @@ const round = (n: number) => Math.round(n * 1000) / 1000;
  * The orbit and the brand list share one active index: it cycles every 2.2 s
  * (with motion), and hovering a brand holds it until the pointer leaves.
  */
-export default function EcosystemOrbit({ brands, core, children }: { brands: Brand[]; core: string; children: ReactNode }) {
+export default function EcosystemOrbit({ brands, core, head, children }: { brands: Brand[]; core: string; head?: ReactNode; children?: ReactNode }) {
   const [active, setActive] = useState(0);
   const next = useRef(1);
   const timer = useRef<number | null>(null);
@@ -74,6 +74,7 @@ export default function EcosystemOrbit({ brands, core, children }: { brands: Bra
         </svg>
       </div>
       <div>
+        {head}
         <ol className="brands">
           {brands.map((b, i) => (
             <li

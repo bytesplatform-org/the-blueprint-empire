@@ -1,12 +1,18 @@
 /**
  * Every fact and copy string on the home page, copied verbatim from
- * docs/reference/blueprint-empire.html. Components render from here; don't
- * edit copy in the components.
+ * docs/reference/blueprint-empire.html and from the home page of the client's
+ * live site (theblueprintempire.co). Components render from here; don't edit
+ * copy in the components.
  */
 
 export type Link = { label: string; href: string };
 
 const BLOB = "https://img1.wsimg.com/blobby/go/1b843c67-b2ad-4cc9-b555-0017dcae5fdc/";
+
+/** The client's live site: pages this one-page site doesn't carry link there. */
+export const SITE = "https://theblueprintempire.co";
+
+const REFERRAL_FORM = "https://docs.google.com/forms/u/0/d/103gqKZBbqk9FexDz_5-eN45k65OQdQ2RRMSbcwg2Zfg/viewform";
 
 export const brand = {
   mark: "BE",
@@ -48,8 +54,12 @@ export const sheets = {
   capabilities: { id: "capabilities", sheet: "A-05" },
   agencies: { id: "agencies", sheet: "A-06" },
   ecosystem: { id: "ecosystem", sheet: "A-07" },
-  founder: { id: "founder", sheet: "A-08" },
-  contact: { id: "contact", sheet: "A-09" },
+  impact: { id: "impact", sheet: "A-08" },
+  blog: { id: "blog", sheet: "A-09" },
+  founder: { id: "founder", sheet: "A-10" },
+  mission: { id: "mission", sheet: "A-11" },
+  contact: { id: "contact", sheet: "A-12" },
+  shop: { id: "shop", sheet: "A-13" },
 } as const;
 
 export const loader = {
@@ -60,12 +70,14 @@ export const loader = {
 
 export const hero = {
   kicker: "Government-ready training · Business development",
-  title: "Building businesses. Developing leaders. Creating opportunities.",
+  /** the live site's headline, set above the three lines */
+  name: "Blueprint Empire™",
+  title: "Building Businesses. Developing Leaders. Creating Opportunities.",
   /** each line: a hollow verb + a filled noun; dir drives entrance, drift and lean */
   lines: [
-    { hollow: "Building", filled: "businesses.", dir: 1 },
-    { hollow: "Developing", filled: "leaders.", dir: -1 },
-    { hollow: "Creating", filled: "opportunities.", dir: 1 },
+    { hollow: "Building", filled: "Businesses.", dir: 1 },
+    { hollow: "Developing", filled: "Leaders.", dir: -1 },
+    { hollow: "Creating", filled: "Opportunities.", dir: 1 },
   ],
   lede: {
     before: "Blueprint Empire Corp designs and delivers ",
@@ -73,6 +85,7 @@ export const hero = {
     after: " for federal, state and community agencies.",
   },
   ctas: {
+    explore: { label: "Explore Our Ecosystem", href: "#ecosystem" },
     primary: { label: "View program catalog", href: "#programs" },
     secondary: { label: "Capability statement ↗", href: capabilityStatement },
   },
@@ -80,13 +93,29 @@ export const hero = {
 
 /** The section that rises over the hero: the three lines set on a ring, and the project credentials. */
 export const statement = {
-  ring: "Building businesses · Developing leaders · Creating opportunities · ",
+  ring: "Building Businesses · Developing Leaders · Creating Opportunities · ",
   credentials: [
     { k: "Project", v: "Blueprint Empire Corp." },
     { k: "Prepared for", v: "Federal · State · Community" },
     { k: "UEI", v: "SM2VWN6B2A34", copy: true },
     { k: "Delivery", v: "Virtual / In person" },
   ],
+};
+
+/** "Who We Are" and "Partner With Us", from the live site; set under the credentials. */
+export const about = {
+  heading: "Who We Are",
+  lead: "Blueprint Empire™ helps entrepreneurs, professionals, and organizations build lasting success through business development, workforce initiatives, education, and strategic partnerships.",
+  body: "We create opportunities that strengthen businesses, careers, and communities.",
+  nsba: {
+    seal: "NSBA",
+    body: "Proud Member of the National Small Business Association (NSBA) Leadership Council, advocating for entrepreneurs, workforce development, and small business growth nationwide.",
+  },
+  partner: {
+    label: "Partner With Us",
+    heading: "Creating Opportunities Together",
+    cta: { label: "Become a Referral Partner", href: REFERRAL_FORM },
+  },
 };
 
 export const ticker = [
@@ -296,22 +325,76 @@ export const agencies = {
 };
 
 export const ecosystem = {
+  label: "Our Ecosystem",
   heading: ["One corporation.", "Seven ways in."],
-  body: "Each brand reaches people at a different point, from reentry to pitching a first business to building wealth across generations.",
-  core: "EMPIRE",
-  brands: [
-    { short: "CORP", name: "Blueprint Empire™ Corporation", tag: "Business development & strategic growth" },
-    { short: "FC2C", name: "From Convict to Corporate Inc.", tag: "Workforce development & reentry services" },
-    { short: "BWA", name: "Blueprint Workforce Alliance™", tag: "Employer & community partnerships" },
-    { short: "PITCH", name: "The Pitch Room™", tag: "Business & pitch development" },
-    { short: "PODCAST", name: "Mommie & Me Podcast™", tag: "Family & entrepreneurship conversations" },
-    { short: "BLOG", name: "Blueprint Empire Blog™", tag: "Education & business resources" },
-    { short: "PARTNERS", name: "Community & Workforce Partnerships", tag: "Strategic community engagement" },
+  body: [
+    "Blueprint Empire™ is a business development ecosystem designed to help individuals, entrepreneurs, nonprofits, and organizations grow through education, workforce development, strategic partnerships, publishing, media, and entrepreneurship. We turn ideas into opportunities and opportunities into impact.",
+    "Each brand reaches people at a different point, from reentry to pitching a first business to building wealth across generations.",
   ],
-  nsba: {
-    seal: "NSBA",
-    body: "Proud member of the National Small Business Association Leadership Council, advocating for entrepreneurs, workforce development and small business growth nationwide.",
+  core: "EMPIRE",
+  brandsHeading: "Our Brands & Initiatives",
+  brandsSub: "Building opportunities through business, workforce, and community impact.",
+  brands: [
+    { short: "CORP", name: "Blueprint Empire™ Corporation", tag: "Business Development & Strategic Growth" },
+    { short: "FC2C", name: "From Convict to Corporate Inc.", tag: "Workforce Development & Reentry Services" },
+    { short: "BWA", name: "Blueprint Workforce Alliance™", tag: "Employer & Community Partnerships" },
+    { short: "PITCH", name: "The Pitch Room™", tag: "Business & Pitch Development" },
+    { short: "PODCAST", name: "Mommie & Me Podcast™", tag: "Family & Entrepreneurship Conversations" },
+    { short: "BLOG", name: "Blueprint Empire Blog™", tag: "Education & Business Resources" },
+    { short: "PARTNERS", name: "Community & Workforce Partnerships", tag: "Strategic Community Engagement" },
+  ],
+};
+
+export const impact = {
+  heading: ["Impact Across", "Our Ecosystem"],
+  body: "Blueprint Empire™ supports entrepreneurs, nonprofits, workforce programs, authors, creators, and community leaders through education, strategy, and opportunity.",
+  logo: { src: "/images/ecosystem/from-convict-to-corporate.png", alt: "From Convict to Corporate™", width: 935, height: 311 },
+  growth: {
+    heading: "Built for Growth",
+    items: [
+      "Business Development",
+      "Workforce Solutions",
+      "Publishing & Media",
+      "Entrepreneurship Education",
+      "Strategic Partnerships",
+      "Community Impact",
+    ],
   },
+};
+
+export type Post = { date: string; title: string; excerpt: string; href: string };
+
+export const blog = {
+  heading: ["Blueprint Empire Blog"],
+  body: "At Blueprint Empire™, we share powerful insights to help entrepreneurs build lasting success. From ready-to-sell business kits and brand-building strategies to funding tips and marketing tools, our blog is your blueprint to growth. Every article is designed to equip you with real-world solutions so you can rise above trends and create a business that lasts.",
+  more: "Continue Reading",
+  // The excerpts are cut where the live site cuts them.
+  posts: [
+    {
+      date: "July 5, 2026",
+      title: "From Convict to Corporate Celebrates Its First Graduation",
+      excerpt: "From Convict to Corporate Celebrates Its First Graduating Class in Baton Rouge",
+      href: `${SITE}/f/from-convict-to-corporate-celebrates-its-first-graduation`,
+    },
+    {
+      date: "September 5, 2025",
+      title: "Welcome to blueprint Empire",
+      excerpt: "Welcome to Blueprint Empire™ Blog",
+      href: `${SITE}/f/empire-blog`,
+    },
+    {
+      date: "August 9, 2025",
+      title: "5 Reasons Entrepreneurs Love Blueprint Empire Kits",
+      excerpt: "1. Time-Saving – No need to spend months figuring out branding and setup.\n2. Professional Design – High-quality logos, marketing flyers, and templates included.\n3. Business Plan Ready – You get a clear launch roadma...",
+      href: `${SITE}/f/5-reasons-entrepreneurs-love-blueprint-empire-kits`,
+    },
+    {
+      date: "August 9, 2025",
+      title: "How to Launch a Business in 30 Days with a Ready-to-Go Kit",
+      excerpt: "Starting a business doesn’t have to take months or even years. With our Blueprint Empire Ready-to-Go Kits, you can have a brand name, logo, marketing materials, and a launch plan in your hands within 30 days. We handle t...",
+      href: `${SITE}/f/how-to-launch-a-business-in-30-days-with-a-ready-to-go-kit`,
+    },
+  ] satisfies Post[],
 };
 
 export const founder = {
@@ -336,7 +419,23 @@ export const founder = {
   ],
 };
 
+export const mission = {
+  heading: ["Our Mission"],
+  body: "At Blueprint Empire™, we empower visionaries to launch, scale, and protect their brands with ready-to-launch business kits. From concept to market, we deliver strategies, resources, and investor-ready solutions that transform bold ideas into profitable empires.",
+};
+
+/** "You Don’t Need More Ideas — You Need Structure.", in its stanzas */
+export const structure = {
+  heading: ["You Don’t Need More Ideas —", "You Need Structure."],
+  stanzas: [
+    ["Most people don’t fail because they lack ambition…", "They fail because they lack direction."],
+    ["At Blueprint Empire™, everything is built to eliminate confusion,", "save time, and position you for real income."],
+    ["This isn’t guesswork.", "This is a blueprint."],
+  ],
+};
+
 export const contact = {
+  label: "Contact Us",
   heading: ["Let's draw up", "your program."],
   body: "Government contracts, program inquiries and referral partnerships. Sessions are available in person or virtually.",
   email: "blueprint@theblueprintempire.co",
@@ -344,10 +443,24 @@ export const contact = {
   // TODO(client): confirm primary address. The reference lists both offices
   // because the client's own site disagrees about which one is primary.
   offices: "Houston, TX 77004 · Denham Springs, LA",
-  hours: "9:00 AM – 5:00 PM",
+  hours: "09:00 am – 05:00 pm",
+  cheer: "✨ Let’s build your empire today!",
   referral: {
     label: "Become a referral partner ↗",
-    href: "https://docs.google.com/forms/u/0/d/103gqKZBbqk9FexDz_5-eN45k65OQdQ2RRMSbcwg2Zfg/viewform",
+    href: REFERRAL_FORM,
+  },
+  /** the live site's location card */
+  visit: {
+    name: "Blueprint Empire",
+    address: "Denham Springs, LA, USA",
+    servicing: "Servicing Denham Spring and Surrounding Areas",
+    delivery: "In person or virtual",
+    directions: { label: "Get directions ↗", href: "https://www.google.com/maps/dir/?api=1&destination=Denham+Springs%2C+LA%2C+USA" },
+    map: {
+      src: "https://maps.google.com/maps?q=Denham%20Springs%2C%20LA%2C%20USA&z=12&output=embed",
+      href: "https://www.google.com/maps/search/?api=1&query=Denham+Springs%2C+LA%2C+USA",
+      title: "Map of Denham Springs, LA",
+    },
   },
   form: {
     inquiryTypes: ["Government contract", "Community program", "Business development", "Referral partnership"],
@@ -359,6 +472,10 @@ export const contact = {
       { value: "Custom curriculum", label: "Custom curriculum" },
     ],
     detailsPlaceholder: "Population served, cohort size, timeline, delivery format",
+    attach: "Attach Files",
+    attachHint: "Up to 5 files, 4 MB in total.",
+    tooBig: "Those files are over 4 MB together. Send fewer, or email them to blueprint@theblueprintempire.co.",
+    attachFallback: "Attach your files to that email.",
     submit: "Send inquiry",
     invalid: "Add your name and a valid email address so we can reply.",
     fallback: "Email your inquiry to blueprint@theblueprintempire.co to reach our team.",
@@ -368,13 +485,55 @@ export const contact = {
   },
 };
 
+/** "Subscribe": the Empire Insider List */
+export const insider = {
+  heading: "Subscribe",
+  body: "“Join the Empire Insider List – Get exclusive updates, new kit launches, and special offers delivered straight to your inbox.”",
+  field: "Email Address",
+  submit: "Sign Up",
+  invalid: "Add a valid email address.",
+  /** shown only after the server confirms delivery */
+  sent: "You’re on the list.",
+  fallback: "Email blueprint@theblueprintempire.co to join the list.",
+  openDraft: "Open it in your email app ↗",
+};
+
+export type Product = { name: string; href: string; image: { src: string; alt: string }; was?: string; price: string; ribbon?: string };
+
+export const products = {
+  heading: "Featured Products",
+  items: [
+    {
+      name: "Closing Like A CEO",
+      href: `${SITE}/shop/ols/products/closing-like-a-ceo`,
+      image: { src: "/images/shop/closing-like-a-ceo.jpg", alt: "Closing Like A CEO: The Business Sales Playbook, by Victoria Harris" },
+      ribbon: "Sale",
+      was: "$20.00",
+      price: "$15.00",
+    },
+    {
+      name: "Empire Goals",
+      href: `${SITE}/shop/ols/products/empire-goals`,
+      image: { src: "/images/shop/empire-goals.jpg", alt: "Empire Goals: Setting a Grand Vision for Your Business, by Victoria Harris" },
+      ribbon: "Sale",
+      was: "$20.00",
+      price: "$15.00",
+    },
+  ] satisfies Product[],
+  all: { label: "View All Products", href: `${SITE}/shop/ols/products` },
+};
+
 export const footer = {
   /** the line above the panel; "Build your empire" is the client's own line */
   lead: { text: "Build your empire.", follow: "Follow along", handle: "@authorvictoriaharris", href: "https://www.instagram.com/authorvictoriaharris" },
   label: "Blueprint",
   wordmark: ["Blueprint"],
   legal: "© 2026 Blueprint Empire Corporation",
-  info: ["Open 9:00 AM – 5:00 PM.", "Houston, TX 77004 · Denham Springs, LA", "UEI SM2VWN6B2A34"],
+  info: ["Open 09:00 am – 05:00 pm.", "Houston, TX 77004 · Denham Springs, LA", "UEI SM2VWN6B2A34"],
+  legalLinks: [
+    { label: "Privacy policy", href: `${SITE}/privacy-policy` },
+    { label: "Terms and Conditions", href: `${SITE}/terms-and-conditions` },
+  ] satisfies Link[],
   work: { title: "Work with us", body: "Government contracts, program inquiries and referral partnerships." },
   hello: "Say hello",
   social: [

@@ -19,6 +19,11 @@ export default function SiteFooter() {
           <div>
             <h4 className="mono">{footer.legal}</h4>
             {footer.info.map(line => <p key={line}>{line}</p>)}
+            <p className="ftr-legal">
+              {footer.legalLinks.map(link => (
+                <a href={link.href} target="_blank" rel="noopener" key={link.href}>{link.label}</a>
+              ))}
+            </p>
           </div>
           <div>
             <h4 className="mono">{footer.work.title}</h4>

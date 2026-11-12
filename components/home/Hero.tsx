@@ -26,21 +26,29 @@ export default function Hero() {
           </ol>
         </div>
 
-        <h1 className="hero-title" id="hero-title" aria-label={hero.title}>
-          {hero.lines.map(line => (
-            <span className="hl" data-line data-dir={line.dir} key={line.hollow}>
-              <span className="hw" data-atlas-word data-hollow="">{line.hollow}</span>{" "}
-              <span className="hw" data-atlas-word>{line.filled}</span>
-              <span className="bl" data-baseline />
-            </span>
-          ))}
-        </h1>
+        <div className="hero-head">
+          <p className="hero-name" data-hero-fade>{hero.name}</p>
+          <h1 className="hero-title" id="hero-title" aria-label={hero.title}>
+            {hero.lines.map(line => (
+              <span className="hl" data-line data-dir={line.dir} key={line.hollow}>
+                <span className="hw" data-atlas-word data-hollow="">{line.hollow}</span>{" "}
+                <span className="hw" data-atlas-word>{line.filled}</span>
+                <span className="bl" data-baseline />
+              </span>
+            ))}
+          </h1>
+        </div>
 
         <div className="hero-bar">
-          <a className="btn" href={hero.ctas.primary.href}>
-            {hero.ctas.primary.label}
-            <Arrow />
-          </a>
+          <div className="hero-ctas">
+            <a className="btn" href={hero.ctas.explore.href}>
+              {hero.ctas.explore.label}
+              <Arrow />
+            </a>
+            <a className="btn ghost" href={hero.ctas.primary.href}>
+              {hero.ctas.primary.label}
+            </a>
+          </div>
           <a className="btn ghost" href={hero.ctas.secondary.href} target="_blank" rel="noopener">
             {hero.ctas.secondary.label}
           </a>

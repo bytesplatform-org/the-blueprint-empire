@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
  * Pinned while it builds, so it completes before the next sheet rises over
  * it. Without motion everything is drawn.
  */
-export default function Elevation({ children }: { children: ReactNode }) {
+export default function Elevation({ head, children }: { head: ReactNode; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,11 +58,15 @@ export default function Elevation({ children }: { children: ReactNode }) {
     apply(0);
 
     // Pin while the building rises, so it's finished before the next sheet
-    // covers it: the list and drawing together where they fit on screen,
-    // otherwise (phones) the drawing alone. The drawing starts as it comes
-    // into view and completes shortly before the pin lets go.
+    // covers it: the heading, list and drawing together where they fit on
+    // screen (so nothing scrolls past while the rest holds still), else the
+    // list and drawing, else (phones) the drawing alone. The drawing starts
+    // as it comes into view and completes shortly before the pin lets go.
     const navBottom = () => document.getElementById("nav")?.getBoundingClientRect().bottom ?? 76;
-    const pinEl = el.offsetHeight <= window.innerHeight - navBottom() - 32 ? el : fig;
+    // (on short desktop screens the CSS tightens the block so it still fits)
+    const room = window.innerHeight - navBottom() - 24;
+    const grid = el.querySelector<HTMLElement>(".intro") ?? el;
+    const pinEl = el.offsetHeight <= room ? el : grid.offsetHeight <= room ? grid : fig;
     const centre = () => (navBottom() + window.innerHeight) / 2;
     const PIN_VH = 1.1;
     const pin = ScrollTrigger.create({
@@ -72,6 +76,8 @@ export default function Elevation({ children }: { children: ReactNode }) {
       pin: pinEl,
       // Lifted to <body> while pinned, so the next sheet's parallax (a
       // transform on this section's wrapper) can't knock it out of place.
+      // GSAP then freezes the block's computed styles inline (line-height
+      // becomes px), so the text inside sets its own line-heights (CSS).
       pinReparent: true,
       invalidateOnRefresh: true,
     });
@@ -107,8 +113,9 @@ export default function Elevation({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="intro" ref={ref}>
-      {children}
+    <div className="elev-block" ref={ref}>
+      {head}
+      <div className="intro">{children}</div>
     </div>
   );
 }

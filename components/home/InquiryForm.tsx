@@ -3,8 +3,7 @@
 import { Fragment, useActionState, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { submitInquiry, type InquiryResult } from "@/app/actions/inquiry";
 import { contact } from "@/lib/content/site";
-
-const EMAIL = /^\S+@\S+\.\S+$/;
+import { ATTACH, EMAIL } from "@/lib/forms";
 
 /**
  * The inquiry form posts to the submitInquiry Server Action. It says "sent"
@@ -14,8 +13,10 @@ const EMAIL = /^\S+@\S+\.\S+$/;
 export default function InquiryForm() {
   const [result, action, pending] = useActionState<InquiryResult | null, FormData>(submitInquiry, null);
   const [invalid, setInvalid] = useState(false);
+  const [tooBig, setTooBig] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const filesRef = useRef<HTMLInputElement>(null);
   const { form } = contact;
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -24,20 +25,31 @@ export default function InquiryForm() {
     if (!name || !EMAIL.test(email)) {
       e.preventDefault();
       setInvalid(true);
+      setTooBig(false);
       (name ? emailRef : nameRef).current?.focus();
       return;
     }
     setInvalid(false);
+    const files = [...(filesRef.current?.files ?? [])];
+    if (files.length > ATTACH.maxFiles || files.reduce((n, f) => n + f.size, 0) > ATTACH.maxBytes) {
+      e.preventDefault();
+      setTooBig(true);
+      filesRef.current?.focus();
+      return;
+    }
+    setTooBig(false);
   };
 
   let message: ReactNode = null;
   if (invalid || (result && !result.ok && result.reason === "invalid")) message = form.invalid;
+  else if (tooBig || (result && !result.ok && result.reason === "too-big")) message = form.tooBig;
   else if (result?.ok) message = form.sent;
   else if (result && !result.ok) {
     const mailto = `mailto:${contact.email}?subject=${encodeURIComponent("Program inquiry")}&body=${encodeURIComponent(result.draft ?? "")}`;
     message = (
       <>
-        {form.fallback} <a href={mailto}>{form.openDraft}</a>
+        {form.fallback}
+        {result.attached && ` ${form.attachFallback}`} <a href={mailto}>{form.openDraft}</a>
       </>
     );
   }
@@ -80,6 +92,11 @@ export default function InquiryForm() {
       <label htmlFor="f-msg">
         Project details
         <textarea id="f-msg" name="msg" placeholder={form.detailsPlaceholder} />
+      </label>
+      <label htmlFor="f-files" className="attach">
+        {form.attach}
+        <input id="f-files" name="files" type="file" multiple accept={ATTACH.accept} ref={filesRef} onChange={() => setTooBig(false)} />
+        <span className="attach-hint">{form.attachHint}</span>
       </label>
       <div className="form-msg" role="status" aria-live="polite" hidden={!message}>
         {message}

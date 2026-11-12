@@ -5,7 +5,6 @@ import SiteFooter from "@/components/site/SiteFooter";
 import ScrollReveals from "@/components/site/ScrollReveals";
 import Hero from "@/components/home/Hero";
 import Statement from "@/components/home/Statement";
-import Marquee from "@/components/home/Marquee";
 import Cursor from "@/components/site/Cursor";
 import ArcParallax from "@/components/site/ArcParallax";
 import Intro from "@/components/home/Intro";
@@ -16,6 +15,10 @@ import Agencies from "@/components/home/Agencies";
 import Ecosystem from "@/components/home/Ecosystem";
 import Founder from "@/components/home/Founder";
 import Contact from "@/components/home/Contact";
+import Impact from "@/components/home/Impact";
+import Blog from "@/components/home/Blog";
+import Mission from "@/components/home/Mission";
+import Shop from "@/components/home/Shop";
 
 export default function Home() {
   return (
@@ -33,9 +36,12 @@ export default function Home() {
         <Capabilities />
         <Agencies />
         <Ecosystem />
+        <Impact />
+        <Blog />
         <Founder />
-        <Marquee />
+        <Mission />
         <Contact />
+        <Shop />
       </main>
       <SiteFooter />
       <ArcParallax />

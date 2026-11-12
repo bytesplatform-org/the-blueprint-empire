@@ -73,7 +73,7 @@ export default function Marquee() {
   }, []);
 
   return (
-    <section className="marquee" ref={ref} aria-label="What we deliver" data-parallax>
+    <section className="marquee" ref={ref} aria-label="What we deliver">
       <p className="sr-only">{ticker.join(", ")}</p>
       <div aria-hidden="true">
         <div className="mq-track" data-track="1">

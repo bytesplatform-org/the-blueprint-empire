@@ -53,8 +53,7 @@ export default function Intro() {
   return (
     <section className="sheet deep on-dark" id={id} data-sheet={sheet}>
       <div className="wrap" data-parallax>
-        <SheetHead heading={intro.heading} body={intro.body} />
-        <Elevation>
+        <Elevation head={<SheetHead heading={intro.heading} body={intro.body} />}>
           <ol className="stages">
             {intro.stages.map((stage, i) => (
               <li key={stage.title} data-reveal="settle" style={i ? ({ "--i": i } as CSSProperties) : undefined}>

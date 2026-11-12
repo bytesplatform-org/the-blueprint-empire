@@ -13,16 +13,29 @@ export function MaskLines({ lines }: { lines: ReactNode[] }) {
   );
 }
 
-/** A section's heading and its intro paragraph. */
-export default function SheetHead({ heading, body }: { heading: string[]; body: string }) {
+/** A section's own name (the live site's title for it), set small above a heading. */
+export function SheetLabel({ children }: { children: ReactNode }) {
+  return (
+    <div className="sheet-label" data-reveal="settle">
+      {children}
+    </div>
+  );
+}
+
+/** A section's heading and its intro paragraph(s), with an optional label above. */
+export default function SheetHead({ label, heading, body }: { label?: string; heading: string[]; body: string | string[] }) {
+  const paragraphs = Array.isArray(body) ? body : [body];
   return (
     <div className="sheet-head">
+      {label && <SheetLabel>{label}</SheetLabel>}
       <h2 data-reveal="mask">
         <MaskLines lines={heading} />
       </h2>
-      <p data-reveal="settle" style={{ "--i": 2 } as CSSProperties}>
-        {body}
-      </p>
+      {paragraphs.map((text, i) => (
+        <p data-reveal="settle" className={i ? "more" : undefined} style={{ "--i": 2 + i } as CSSProperties} key={i}>
+          {text}
+        </p>
+      ))}
     </div>
   );
 }

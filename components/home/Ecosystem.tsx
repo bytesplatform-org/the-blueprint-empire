@@ -9,14 +9,18 @@ export default function Ecosystem() {
     <section className="sheet vellum arc" id={id} data-sheet={sheet}>
       <ArcBg />
       <div className="wrap">
-        <SheetHead heading={ecosystem.heading} body={ecosystem.body} />
+        <SheetHead label={ecosystem.label} heading={ecosystem.heading} body={ecosystem.body} />
         <div className="eco">
-          <EcosystemOrbit brands={ecosystem.brands} core={ecosystem.core}>
-            <div className="nsba" data-reveal="settle">
-              <span className="seal">{ecosystem.nsba.seal}</span>
-              <p>{ecosystem.nsba.body}</p>
-            </div>
-          </EcosystemOrbit>
+          <EcosystemOrbit
+            brands={ecosystem.brands}
+            core={ecosystem.core}
+            head={
+              <div className="brands-head" data-reveal="settle">
+                <h3>{ecosystem.brandsHeading}</h3>
+                <p>{ecosystem.brandsSub}</p>
+              </div>
+            }
+          />
         </div>
       </div>
     </section>

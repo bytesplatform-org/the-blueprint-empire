@@ -6,7 +6,7 @@ export default function Founder() {
   const { id, sheet } = sheets.founder;
   return (
     <section className="sheet on-dark" id={id} data-sheet={sheet}>
-      <div className="wrap">
+      <div className="wrap" data-parallax>
         <div className="founder">
           {/* TODO(client): portrait photo. The outlined monogram stands in until one is supplied. */}
           <div className="portrait" data-reveal="sweep">
