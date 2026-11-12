@@ -400,8 +400,7 @@ section { position: relative; }
 .mark-xl { width: clamp(96px, 14vw, 150px); height: clamp(96px, 14vw, 150px); font-size: clamp(40px, 6vw, 64px); border-width: 1.5px; border-color: var(--graphite); color: var(--graphite); }
 .mark-xl::after { width: 18%; height: 18%; right: -9%; bottom: -9%; }
 .statement-drop { display: block; width: 1px; height: clamp(72px, 10vw, 140px); margin: 0 auto; background: var(--rule); }
-html.armed .statement-drop[data-reveal="rule"] { transform: scaleY(0); transform-origin: top; }
-html.armed .statement-drop[data-reveal="rule"][data-shown] { transform: none; }
+html.armed .statement-drop[data-reveal="rule"] { transform: scaleY(var(--rv)); transform-origin: top; }
 .creds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; margin: 40px 0 0; }
 .creds > div { border-top: 1px solid var(--graphite); padding-top: 16px; min-width: 0; }
 .creds dt { color: var(--graphite-dim); }
@@ -426,21 +425,27 @@ html.armed .statement-drop[data-reveal="rule"][data-shown] { transform: none; }
 .on-dark .sheet-head p { color: var(--line-dim); }
 .deep { background-color: var(--night-deep); }
 
-/* ---------- REVEALS (armed by JS only) ---------- */
+/* ---------- REVEALS (armed by JS only) ----------
+   Scrubbed, not one-shot: ScrollReveals drives --rv from 0 to 1 as each
+   element scrolls through its range, so reveals play back in reverse when you
+   scroll up and again when you return. --i delays an item's share of the range
+   (a stagger across a row). Hidden states exist only under html.armed. */
 .line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
 .line > span { display: block; }
-html.armed [data-reveal="mask"] .line > span { transform: translateY(110%); transition: transform 1.1s var(--ease) calc(var(--i, 0) * 90ms); }
-html.armed [data-reveal="mask"][data-shown] .line > span { transform: none; }
-html.armed [data-reveal="sweep"] { clip-path: inset(0 100% 0 0); transition: clip-path 1.4s var(--ease); }
-html.armed [data-reveal="sweep"][data-shown] { clip-path: inset(0 0 0 0); }
-html.armed [data-reveal="rule"] { transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease) calc(var(--i, 0) * 110ms); }
-html.armed [data-reveal="rule"][data-shown] { transform: none; }
-html.armed [data-reveal="settle"] {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 1s var(--ease) calc(var(--i, 0) * 80ms), transform 1.1s var(--ease) calc(var(--i, 0) * 80ms);
+html.armed [data-reveal] { --rv: 0; }
+html.armed [data-reveal="mask"] .line > span {
+  transform: translateY(calc((1 - clamp(0, calc(var(--rv) * 1.5 - var(--i, 0) * 0.25), 1)) * 110%));
 }
-html.armed [data-reveal="settle"][data-shown] { opacity: 1; transform: none; }
+html.armed [data-reveal="sweep"] { clip-path: inset(0 calc((1 - var(--rv)) * 100%) 0 0); }
+html.armed [data-reveal="rule"] {
+  transform: scaleX(clamp(0, calc(var(--rv) * 1.3 - var(--i, 0) * 0.1), 1));
+  transform-origin: left;
+}
+html.armed [data-reveal="settle"] {
+  --p: clamp(0, calc(var(--rv) * 1.35 - var(--i, 0) * 0.08), 1);
+  opacity: var(--p);
+  transform: translateY(calc((1 - var(--p)) * 26px));
+}
 
 /* ---------- INTRO (Fig. 01) ---------- */
 .intro { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; }
@@ -1065,26 +1070,44 @@ html.motion .ps-playhead.ghost.on { opacity: 1; }
   .cline .k { grid-column: 1 / -1; }
 }
 
-/* ---------- FOOTER ---------- */
-.site-footer { background: var(--night-deep); border-top: 1px solid var(--line-faint); overflow: hidden; }
-.site-footer .wrap { padding-block: 56px calc(32px + env(safe-area-inset-bottom, 0px)); max-width: none; }
-.foot-word { position: relative; }
-.foot-word canvas { position: absolute; left: 0; right: 0; top: -40px; width: 100%; height: calc(100% + 80px); pointer-events: none; }
-.foot-big {
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: clamp(2.4rem, 10.5vw, 11rem);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+/* ---------- FOOTER ----------
+   A dark panel inset in the ivory page; the wordmark (EyesWordmark) is sized
+   in JS to fill the panel and cropped by its bottom edge. */
+.site-footer {
+  background: var(--vellum);
+  color: var(--graphite);
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
 }
-.foot-big .fw { display: inline-block; color: var(--line-dim); }
-.foot-big .fw[data-hollow] { color: transparent; -webkit-text-stroke: 1.5px var(--line-dim); }
-.foot-word[data-gl-type] .fw { color: transparent; -webkit-text-stroke-color: transparent; }
-.foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--line-faint); color: var(--line-dim); }
-.foot-row a { text-decoration: none; }
-.foot-row a:hover { color: var(--line); }
-.foot-row nav { display: flex; flex-wrap: wrap; gap: 18px; }
+.ftr-lead { text-align: center; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.35rem, 2.1vw, 1.9rem); line-height: 1.2; margin-bottom: 28px; }
+.ftr-lead a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.ftr-lead a:hover { color: var(--brass-ink); }
+.ftr-panel { position: relative; overflow: hidden; border-radius: 28px; background: var(--night); color: var(--line); padding: 28px clamp(18px, 2.4vw, 32px) 0; }
+.ftr-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 32px; font-size: var(--s-2); line-height: 1.5; color: var(--line-dim); }
+.ftr-cols h4 { margin: 0 0 12px; color: var(--line); font-size: 10.5px; font-weight: 500; }
+.ftr-cols p + p { margin-top: 2px; }
+.ftr-cols nav { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.ftr-cols nav a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; color: var(--line); }
+.ftr-cols nav a:hover { color: var(--brass); }
+.ftr-mail { display: flex; justify-content: space-between; gap: 16px; max-width: 360px; margin-top: 14px; padding: 6px 0; border-bottom: 1px solid var(--line-dim); color: var(--line); text-decoration: none; transition: border-color 0.3s, color 0.3s; }
+.ftr-mail:hover { border-color: var(--brass); color: var(--brass); }
+.ftr-mark { position: relative; margin: clamp(28px, 4vw, 56px) 0 -0.05em; font-size: 17vw; }
+.eye-line {
+  display: block;
+  width: max-content;
+  font-family: var(--f-display);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--line);
+}
+.ftr-mark canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ftr-mark[data-eyes] .eye-line { color: transparent; }
+@media (max-width: 760px) {
+  .ftr-cols { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .ftr-panel { border-radius: 22px; }
+}
 
 /* ---------- CURSOR ---------- */
 .cursor {

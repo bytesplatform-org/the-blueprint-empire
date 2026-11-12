@@ -369,15 +369,17 @@ export const contact = {
 };
 
 export const footer = {
-  words: [
-    { text: "Blueprint", hollow: false },
-    { text: "Empire", hollow: true },
-  ],
-  label: "Blueprint Empire",
-  legal: "© 2026 Blueprint Empire Corporation · UEI SM2VWN6B2A34",
+  /** the line above the panel; "Build your empire" is the client's own line */
+  lead: { text: "Build your empire.", follow: "Follow along", handle: "@authorvictoriaharris", href: "https://www.instagram.com/authorvictoriaharris" },
+  label: "Blueprint",
+  wordmark: ["Blueprint"],
+  legal: "© 2026 Blueprint Empire Corporation",
+  info: ["Open 9:00 AM – 5:00 PM.", "Houston, TX 77004 · Denham Springs, LA", "UEI SM2VWN6B2A34"],
+  work: { title: "Work with us", body: "Government contracts, program inquiries and referral partnerships." },
+  hello: "Say hello",
   social: [
     { label: "Facebook ↗", href: "https://www.facebook.com/share/1GjMXgEYjz/" },
     { label: "Instagram ↗", href: "https://www.instagram.com/authorvictoriaharris" },
   ] satisfies Link[],
-  back: { label: "Back to the footing ↑", href: "#top" },
+  back: { label: "Back to top ↑", href: "#top" },
 };

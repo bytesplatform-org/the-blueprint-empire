@@ -2,7 +2,7 @@ import Loader from "@/components/site/Loader";
 import FilmTrail from "@/components/site/FilmTrail";
 import SiteNav from "@/components/site/SiteNav";
 import SiteFooter from "@/components/site/SiteFooter";
-import RevealObserver from "@/components/site/RevealObserver";
+import ScrollReveals from "@/components/site/ScrollReveals";
 import Hero from "@/components/home/Hero";
 import Statement from "@/components/home/Statement";
 import Marquee from "@/components/home/Marquee";
@@ -39,7 +39,7 @@ export default function Home() {
       </main>
       <SiteFooter />
       <ArcParallax />
-      <RevealObserver />
+      <ScrollReveals />
       <Cursor />
     </>
   );

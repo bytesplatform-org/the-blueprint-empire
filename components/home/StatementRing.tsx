@@ -38,12 +38,11 @@ export default function StatementRing({ text, children }: { text: string; childr
         immediateRender: false,
         scrollTrigger: { trigger: section, start: "top 95%", end: "center 55%", scrub: 0.6 },
       });
-      gsap.from(mark, {
-        autoAlpha: 0,
-        scale: 0.8,
-        duration: 1.4,
-        ease: "expo.out",
-        scrollTrigger: { trigger: mark, start: "top 80%", once: true },
+      gsap.fromTo(mark, { autoAlpha: 0, scale: 0.8 }, {
+        autoAlpha: 1,
+        scale: 1,
+        ease: "power2.out",
+        scrollTrigger: { trigger: mark, start: "top 88%", end: "top 55%", scrub: 0.6 },
       });
     }, el);
     return () => ctx.revert();
