@@ -12,16 +12,19 @@ gsap.registerPlugin(ScrollTrigger);
  * that section drifts down at ~60 % speed while it's being covered, so the
  * sheet appears to scroll faster and lift off the page.
  *
- * The drift moves the previous section's [data-parallax] wrapper, never the
- * section itself: a transform on a pinned element or any ancestor of one
- * would break the pin. Mounted once, after every section.
+ * The drift moves the previous section's [data-parallax] wrapper, or the
+ * section itself when it's marked (only where it holds no pin: a transform on
+ * a pinned element or any ancestor of one would break the pin). Mounted once,
+ * after every section.
  */
 export default function ArcParallax() {
   useEffect(() => {
     if (!motionAllowed()) return;
     const ctx = gsap.context(() => {
       document.querySelectorAll<HTMLElement>("section.arc").forEach(sheet => {
-        const target = sheet.previousElementSibling?.querySelector<HTMLElement>("[data-parallax]");
+        // the previous section itself (when it holds no pin), or its marked wrapper
+        const prev = sheet.previousElementSibling as HTMLElement | null;
+        const target = prev?.matches("[data-parallax]") ? prev : prev?.querySelector<HTMLElement>("[data-parallax]");
         if (!target) return;
         // No transform at all outside the drift (immediateRender off, cleared
         // when scrolled back above it): a transform on a section that holds a
